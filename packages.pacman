@@ -1,27 +1,27 @@
 # Runtime
-npm=latest
-docker=latest
-python=latest
+npm
+docker
+python
 
 # Tools
-7zip=latest
-eza=latest
-fzf=latest
-git=latest
-ripgrep=latest
-zoxide=latest
+7zip
+eza
+fzf
+git
+ripgrep
+zoxide
 
 # Environment
-hyprland=latest
-quickshell=latest
-ghostty=latest
-rofi=latest
+hyprland
+quickshell
+ghostty
+rofi
 
 # Text editors
-obsidian=latest
+obsidian
 
 # Code editors
-zed=latest
+zed
 
 # Browsers
-librewolf=latest
+librewolf
