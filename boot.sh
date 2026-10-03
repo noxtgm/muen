@@ -1,11 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-REPO_AUTHOR="${REPO_AUTHOR:-noxtgm}"
-REPO_NAME="${REPO_NAME:-muen}"
-REPO_BRANCH="${REPO_BRANCH:-main}"
-REPO_URL="https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git"
-REPO_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/${REPO_NAME}"
+export REPO_AUTHOR="${REPO_AUTHOR:-noxtgm}"
+export REPO_NAME="${REPO_NAME:-muen}"
+export REPO_BRANCH="${REPO_BRANCH:-main}"
+export REPO_URL="https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git"
+export REPO_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/${REPO_NAME}"
+export REPO_LIB="${REPO_PATH}/lib"
+
+export STATE_PATH="${XDG_STATE_HOME:-$HOME/.local/state}/${REPO_NAME}"
+export LOG_FILE="${STATE_PATH}/${REPO_NAME}.log"
 
 _boot_die() {
     printf '\e[1;31merror:\e[0m %s\n' "$1" >&2
@@ -32,9 +36,8 @@ main() {
     [[ $EUID -ne 0 ]] || _boot_die "Run as a regular user, not root."
     [[ -f /etc/arch-release ]] || _boot_die "Only Arch Linux is supported."
 
-    if ! command -v git &> /dev/null; then
-        _boot_step "Installing git"
-        sudo pacman -Syu --needed --noconfirm git
+    if ! command -v git &>/dev/null; then
+        sudo pacman -S --noconfirm --needed git
     fi
 
     _boot_clone
