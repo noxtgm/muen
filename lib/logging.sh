@@ -7,6 +7,7 @@ _log_to_file() {
 }
 
 _log_on_error() {
+    (( BASH_SUBSHELL == 0 )) || return 0
     log_error "'$2' failed with exit code $1 at ${3##*/}:$4"
 }
 
