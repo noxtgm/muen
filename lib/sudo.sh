@@ -10,7 +10,7 @@ _sudo_stop_keepalive() {
 
 sudo_init() {
     log_step "Requesting sudo privileges"
-    sudo -v || die "Could not obtain sudo privileges (is $(id -un) in the wheel group?)."
+    sudo -v || die "Could not obtain sudo privileges, is $(id -un) in the wheel group?"
 
     (
         trap - ERR
