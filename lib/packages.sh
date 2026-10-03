@@ -13,7 +13,7 @@ packages_install_pacman() {
         return 0
     fi
 
-    sudo pacman -S --needed --noconfirm "${pkgs[@]}"
+    sudo pacman -Syu --needed --noconfirm "${pkgs[@]}"
     log_info "${#pkgs[@]} packages installed"
 }
 
@@ -23,7 +23,7 @@ packages_install_yay() {
         build_dir="$(mktemp -d)"
         trap 'rm -rf "$build_dir"' EXIT
         git clone --depth 1 https://aur.archlinux.org/yay-bin.git "$build_dir"
-        cd "$build_dir"
+        cd "$build_dir" || exit
         makepkg -si --noconfirm
     )
     log_info "yay installed"
