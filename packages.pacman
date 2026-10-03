@@ -1,6 +1,7 @@
 npm
 docker
 python
+base-devel
 
 7zip
 eza
@@ -13,9 +14,9 @@ quickshell
 ghostty
 rofi
 
-obsidian
+librewolf
+tor
 
 zed
 
-librewolf
-tor
+obsidian
