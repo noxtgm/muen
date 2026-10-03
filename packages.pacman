@@ -1,27 +1,21 @@
-# Runtime
 npm
 docker
 python
 
-# Tools
 7zip
 eza
 fzf
-git
 ripgrep
 zoxide
 
-# Environment
 hyprland
 quickshell
 ghostty
 rofi
 
-# Text editors
 obsidian
 
-# Code editors
 zed
 
-# Browsers
 librewolf
+tor
