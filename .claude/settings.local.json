@@ -1,9 +1,0 @@
-{
-  "enabledPlugins": {
-    "code-simplifier@anthropic-plugin-directory": true,
-    "superpowers@anthropic-plugin-directory": true,
-    "claude-md-management@anthropic-plugin-directory": true
-  },
-  "spinnerTipsEnabled": false,
-  "outputStyle": "Concise"
-}
