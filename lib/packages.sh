@@ -2,7 +2,7 @@
 
 _packages_read() {
     [[ -f "$1" ]] || return 0
-    awk '{ sub(/#.*/, ""); for (i = 1; i <= NF; i++) print $i }' "$1"
+    awk '{ for (i = 1; i <= NF; i++) print $i }' "$1"
 }
 
 _packages_not_in_repos() {
