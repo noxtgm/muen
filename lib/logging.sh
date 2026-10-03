@@ -1,19 +1,7 @@
 #!/bin/bash
 
 _log_to_file() {
-    [[ -n "${LOG_FILE:-}" ]] || return 0
-    [[ -d "${LOG_FILE%/*}" ]] || mkdir -p "${LOG_FILE%/*}"
-    printf '[%s] %-5s %s\n' "$(date '+%F %T')" "$1" "$2" >> "$LOG_FILE"
-}
-
-_log_on_error() {
-    (( BASH_SUBSHELL == 0 )) || return 0
-    log_error "'$2' failed with exit code $1 at ${3##*/}:$4"
-}
-
-log_trap_errors() {
-    set -o errtrace
-    trap '_log_on_error $? "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
+    { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$1] $2" >> "${REPO_LOG:-/dev/null}"; } 2>/dev/null || true
 }
 
 log_step() {
