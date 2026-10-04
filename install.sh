@@ -15,7 +15,8 @@ if [[ -f "${BASH_SOURCE[0]:-}" ]]; then
     fi
 fi
 
-REPO_LOG="${XDG_STATE_HOME:-$HOME/.local/state}/${REPO_NAME}/${REPO_NAME}.log"
+REPO_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/${REPO_NAME}"
+REPO_LOG="${REPO_STATE}/${REPO_NAME}.log"
 REPO_LIB="${REPO_PATH}/lib"
 
 _clone_repo() {
