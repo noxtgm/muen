@@ -56,6 +56,9 @@ _install_all() {
     packages_install_npm
     links_apply
 
+    log_step "Setting zsh as login shell"
+    sudo chsh -s /usr/bin/zsh "$USER"
+
     log_step "Installation complete"
     if [[ "$reboot" == true ]]; then
         read -rt 10 -p "  Rebooting in 10s (Enter to reboot now, Ctrl+C to cancel) " || true

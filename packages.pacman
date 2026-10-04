@@ -9,6 +9,10 @@ fzf
 ripgrep
 zoxide
 
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+
 hyprland
 quickshell
 ghostty
