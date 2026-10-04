@@ -33,16 +33,21 @@ _set_params() {
     system_write "$1" "$content"
 }
 
+_set_loader_option() {
+    if grep -Eq "^$2([[:space:]]|$)" <<< "$1"; then
+        sed -E "s/^$2([[:space:]].*)?$/$2 $3/" <<< "$1"
+    else
+        echo "${1:+$1$'\n'}$2 $3"
+    fi
+}
+
 bootloader_hide_menu() {
     local conf content
-    log_step "Hiding boot menu"
+    log_step "Hiding and locking boot menu"
     conf="$(_boot_path)/loader/loader.conf"
     content="$(system_read "$conf" 2> /dev/null || true)"
-    if grep -q '^timeout' <<< "$content"; then
-        content="$(sed 's/^timeout.*/timeout 0/' <<< "$content")"
-    else
-        content="${content:+$content$'\n'}timeout 0"
-    fi
+    content="$(_set_loader_option "$content" timeout 0)"
+    content="$(_set_loader_option "$content" editor no)"
     system_write "$conf" "$content"
 }
 
