@@ -15,12 +15,12 @@ log_info() {
 }
 
 log_warn() {
-    printf "${YELLOW}warning:${OFF} %s\n" "$1" >&2
+    printf "${YELLOW}WARNING:${OFF} %s\n" "$1" >&2
     _log_to_file WARN "$1"
 }
 
 log_error() {
-    printf "${RED}error:${OFF} %s\n" "$1" >&2
+    printf "${RED}ERROR:${OFF} %s\n" "$1" >&2
     _log_to_file ERROR "$1"
 }
 
