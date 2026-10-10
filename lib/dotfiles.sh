@@ -111,7 +111,7 @@ dotfiles_update() {
         for reason in "${conflicts[@]}"; do
             log_error "$reason"
         done
-        log_error "${#conflicts[@]} conflicting configs were skipped, remove them or run \`muen update --force\` (local copies are backed up to ${REPO_BACKUPS}/)"
+        log_error "${#conflicts[@]} conflicting configs were skipped and left untouched, remove them or run \`muen update --force\` to back them up to ${REPO_BACKUPS}/ and overwrite them"
         return 1
     fi
 }
