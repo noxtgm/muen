@@ -3,7 +3,7 @@ if (( $+commands[fzf] )); then
         local file
         file=$(fzf --preview="cat {}")
         if [[ -n "$file" ]]; then
-            nvim "$file"
+            nvim -- "$file"
         fi
     }
 
