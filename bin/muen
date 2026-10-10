@@ -10,8 +10,13 @@ REPO_DEPLOYED="${REPO_STATE}/deployed"
 REPO_BACKUPS="${REPO_STATE}/backups"
 REPO_FORCE=0
 
-mkdir -p "$REPO_STATE"
 source "${REPO_LIB}/init.sh"
+
+if (( EUID == 0 )); then
+    die "Run muen as your user, not as root"
+fi
+
+mkdir -p "$REPO_STATE"
 
 usage() {
     cat <<EOF
