@@ -46,7 +46,6 @@ cmd_update() {
     fi
 
     packages_install_pacman
-    packages_install_yay
     packages_install_aur
     packages_install_npm
     shell_set_default

@@ -17,13 +17,8 @@ packages_install_pacman() {
     log_info "${#pkgs[@]} packages up to date"
 }
 
-packages_install_yay() {
-    log_step "Installing yay"
-    if command -v yay > /dev/null; then
-        log_info "yay already installed"
-        return 0
-    fi
-
+_packages_install_yay() {
+    log_info "Installing yay"
     (
         build_dir="$(mktemp -d)"
         trap 'rm -rf "$build_dir"' EXIT
@@ -41,6 +36,10 @@ packages_install_aur() {
     if (( ${#pkgs[@]} == 0 )); then
         log_info "Nothing to install"
         return 0
+    fi
+
+    if ! command -v yay > /dev/null; then
+        _packages_install_yay
     fi
 
     yay -S --needed --noconfirm --answerclean None --answerdiff None "${pkgs[@]}"
