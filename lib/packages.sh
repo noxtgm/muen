@@ -14,7 +14,7 @@ packages_install_pacman() {
     fi
 
     sudo pacman -Syu --needed --noconfirm "${pkgs[@]}"
-    log_info "${#pkgs[@]} packages installed"
+    log_info "${#pkgs[@]} packages up to date"
 }
 
 packages_install_yay() {
@@ -44,7 +44,7 @@ packages_install_aur() {
     fi
 
     yay -S --needed --noconfirm --answerclean None --answerdiff None "${pkgs[@]}"
-    log_info "${#pkgs[@]} packages installed"
+    log_info "${#pkgs[@]} packages up to date"
 }
 
 packages_install_npm() {
@@ -59,5 +59,5 @@ packages_install_npm() {
     export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
     export PATH="${PNPM_HOME}/bin:${PATH}"
     pnpm add --global "${pkgs[@]/#/--allow-build=}" "${pkgs[@]}"
-    log_info "${#pkgs[@]} packages installed"
+    log_info "${#pkgs[@]} packages up to date"
 }
