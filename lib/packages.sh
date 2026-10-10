@@ -24,7 +24,7 @@ packages_install_yay() {
         trap 'rm -rf "$build_dir"' EXIT
         git clone --depth 1 https://aur.archlinux.org/yay-bin.git "$build_dir"
         cd "$build_dir" || exit
-        makepkg -si --noconfirm
+        makepkg -sri --noconfirm
     )
     log_info "yay installed"
 }
@@ -51,6 +51,8 @@ packages_install_npm() {
         return 0
     fi
 
-    npm install --global --prefix "$HOME/.local" "${pkgs[@]}"
+    export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
+    export PATH="${PNPM_HOME}:${PATH}"
+    pnpm add --global "${pkgs[@]}"
     log_info "${#pkgs[@]} packages installed"
 }
