@@ -1,8 +1,11 @@
+git
+7zip
+base-devel
+
 pnpm
 docker
 python
 
-7zip
 eza
 fzf
 ripgrep
