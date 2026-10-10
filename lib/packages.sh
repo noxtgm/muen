@@ -19,6 +19,11 @@ packages_install_pacman() {
 
 packages_install_yay() {
     log_step "Installing yay"
+    if command -v yay > /dev/null; then
+        log_info "yay already installed"
+        return 0
+    fi
+
     (
         build_dir="$(mktemp -d)"
         trap 'rm -rf "$build_dir"' EXIT
@@ -52,7 +57,7 @@ packages_install_npm() {
     fi
 
     export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
-    export PATH="${PNPM_HOME}:${PATH}"
-    pnpm add --global "${pkgs[@]}"
+    export PATH="${PNPM_HOME}/bin:${PATH}"
+    pnpm add --global "${pkgs[@]/#/--allow-build=}" "${pkgs[@]}"
     log_info "${#pkgs[@]} packages installed"
 }
