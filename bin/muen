@@ -1,0 +1,58 @@
+#!/bin/bash
+set -euo pipefail
+
+REPO_NAME="${REPO_NAME:-muen}"
+REPO_PATH="$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")"
+REPO_LIB="${REPO_PATH}/lib"
+REPO_STATE="${REPO_STATE:-$HOME/.local/state/${REPO_NAME}}"
+REPO_LOG="${REPO_STATE}/install.log"
+REPO_DEPLOYED="${REPO_STATE}/deployed"
+REPO_BACKUPS="${REPO_STATE}/backups"
+REPO_FORCE=0
+
+mkdir -p "$REPO_STATE"
+source "${REPO_LIB}/init.sh"
+
+usage() {
+    cat <<EOF
+Usage: muen <command>
+
+Commands:
+  update [-f|--force]  Pull the latest changes, install packages, and apply configs
+                       --force overwrites conflicting configs after backing them up
+EOF
+}
+
+cmd_update() {
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -f|--force) REPO_FORCE=1 ;;
+            *) die "Unknown option: $arg" ;;
+        esac
+    done
+
+    # Run from the pulled checkout so the rest of the update uses the latest libs
+    if [[ "${_MUEN_PULLED:-0}" != 1 ]]; then
+        log_step "Pulling latest changes"
+        git -C "$REPO_PATH" pull --ff-only
+        export _MUEN_PULLED=1
+        exec "${REPO_PATH}/bin/muen" update "$@"
+    fi
+
+    packages_install_pacman
+    packages_install_yay
+    packages_install_aur
+    packages_install_npm
+    dotfiles_update
+}
+
+main() {
+    case "${1:-}" in
+        update) shift; cmd_update "$@" ;;
+        ""|help|-h|--help) usage ;;
+        *) die "Unknown command: $1" ;;
+    esac
+}
+
+main "$@"
