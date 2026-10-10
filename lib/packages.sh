@@ -57,6 +57,6 @@ packages_install_npm() {
 
     export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
     export PATH="${PNPM_HOME}/bin:${PATH}"
-    pnpm add --global "${pkgs[@]/#/--allow-build=}" "${pkgs[@]}"
+    pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${pkgs[@]/#/--allow-build=}" "${pkgs[@]}"
     log_info "${#pkgs[@]} packages up to date"
 }
