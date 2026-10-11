@@ -17,6 +17,9 @@ zsh-syntax-highlighting
 
 hyprland
 hyprlauncher
+hyprpolkitagent
+xdg-desktop-portal-hyprland
+qt6-wayland
 quickshell
 ghostty
 xdg-terminal-exec
