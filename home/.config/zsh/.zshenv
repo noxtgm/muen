@@ -1,5 +1,6 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
+export TERMINAL="ghostty"
 export PNPM_HOME="$HOME/.local/share/pnpm"
 
 typeset -U path

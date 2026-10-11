@@ -19,6 +19,7 @@ hyprland
 hyprlauncher
 quickshell
 ghostty
+xdg-terminal-exec
 
 librewolf
 tor
