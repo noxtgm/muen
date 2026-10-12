@@ -27,6 +27,7 @@ hl.config({
     dwindle = {
         preserve_split = true,
         force_split    = 2, -- New windows open to the right or below
+        precise_mouse_move = true,
     },
 
     misc = {
