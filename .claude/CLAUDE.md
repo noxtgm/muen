@@ -28,7 +28,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 # Additional firmware
 
-- None
+- Noto font
 
 # Authentication
 
@@ -64,7 +64,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 ## Additional fonts
 
-- None
+- TBA
 
 # Network configuration
 
