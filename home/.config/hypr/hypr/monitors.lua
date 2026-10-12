@@ -15,13 +15,13 @@ hl.monitor({
 })
 
 -- Closing the lid turns the internal display off while an external monitor is connected
-hl.bind("switch:on:Lid Switch", function ()
+hl.bind("switch:on:Lid switch", function ()
     if #hl.get_monitors() > 1 then
         hl.monitor({ output = "eDP-1", disabled = true })
     end
 end, { locked = true, description = "Lid closed" })
 
-hl.bind("switch:off:Lid Switch", function ()
+hl.bind("switch:off:Lid switch", function ()
     hl.monitor({ output = "eDP-1", disabled = false })
 end, { locked = true, description = "Lid opened" })
 
