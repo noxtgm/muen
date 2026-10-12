@@ -28,10 +28,11 @@ hl.config({
     },
 
     misc = {
-        disable_hyprland_logo    = true,
-        disable_splash_rendering = true,
-        focus_on_activate        = true,
-        background_color         = "rgb(000000)",
+        allow_session_lock_restore = true, -- Allow restarting hyprlock if it crashes, the session stays locked meanwhile
+        disable_hyprland_logo      = true,
+        disable_splash_rendering   = true,
+        focus_on_activate          = true,
+        background_color           = "rgb(000000)",
     },
 
     cursor = {
