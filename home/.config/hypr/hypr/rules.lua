@@ -72,6 +72,15 @@ hl.window_rule({
     border_size = 0,
 })
 
+-- Teal border on scratchpad windows
+hl.window_rule({
+    name  = "highlight-scratchpad",
+    match = { workspace = "s[true]" },
+
+    border_size  = 2,
+    border_color = "rgb(2aa1b3)",
+})
+
 -- Highlighted border when a window is maximized
 hl.window_rule({
     name  = "highlight-maximized",
@@ -85,6 +94,7 @@ hl.window_rule({
 hl.workspace_rule({
     workspace        = "special:scratchpad",
     on_created_empty = "ghostty",
+    gaps_out         = 40,
 })
 
 -- Hide the launcher from screen sharing and open it instantly
