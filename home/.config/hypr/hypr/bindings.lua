@@ -8,9 +8,9 @@ hl.bind("SUPER + RETURN", hl.dsp.exec_cmd(terminal), { description = "Terminal" 
 hl.bind("SUPER + SPACE",  hl.dsp.exec_cmd(menu),     { description = "App launcher" })
 
 -- Window management
-hl.bind("SUPER + Q", hl.dsp.window.close(),                             { description = "Close window" })
+hl.bind("SUPER + SHIFT + Q", hl.dsp.window.close(),                     { description = "Close window" })
 hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }),        { description = "Toggle floating" })
-hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "fullscreen" }), { description = "Fullscreen" })
+hl.bind("SUPER + F", hl.dsp.window.fullscreen({ mode = "maximized" }),  { description = "Maximize" })
 hl.bind("SUPER + J", hl.dsp.layout("togglesplit"),                      { description = "Toggle split" })
 
 -- Focus
