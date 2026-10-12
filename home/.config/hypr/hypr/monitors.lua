@@ -28,6 +28,11 @@ end, { locked = true, description = "Lid opened" })
 -- Toggle mirroring the internal display on external monitors
 local mirrored = false
 hl.bind("SUPER + P", function ()
+    -- Only start mirroring when an external monitor is connected
+    if not mirrored and #hl.get_monitors() < 2 then
+        return
+    end
+
     mirrored = not mirrored
     hl.monitor({ output = "", mirror = mirrored and "eDP-1" or "" })
 end, { description = "Toggle mirroring" })
