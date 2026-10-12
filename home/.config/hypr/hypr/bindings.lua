@@ -25,6 +25,12 @@ hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.move({ direction = "r" }), { desc
 hl.bind("SUPER + SHIFT + UP", hl.dsp.window.move({ direction = "u" }), { description = "Move up" })
 hl.bind("SUPER + SHIFT + DOWN", hl.dsp.window.move({ direction = "d" }), { description = "Move down" })
 
+-- Window movement between displays
+hl.bind("SUPER + ALT + LEFT", hl.dsp.window.move({ monitor = "l" }), { description = "Move to display left" })
+hl.bind("SUPER + ALT + RIGHT", hl.dsp.window.move({ monitor = "r" }), { description = "Move to display right" })
+hl.bind("SUPER + ALT + UP", hl.dsp.window.move({ monitor = "u" }), { description = "Move to display up" })
+hl.bind("SUPER + ALT + DOWN", hl.dsp.window.move({ monitor = "d" }), { description = "Move to display down" })
+
 -- Window cycling
 hl.bind("ALT + TAB", hl.dsp.window.cycle_next(), { description = "Next window" })
 hl.bind("ALT + TAB", hl.dsp.window.bring_to_top(), { description = "Bring to top" })
