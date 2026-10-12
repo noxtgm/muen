@@ -50,6 +50,7 @@ hl.window_rule({
     float             = true,
     pin               = true,
     keep_aspect_ratio = true,
+    border_size       = 0,
 })
 
 -- Floating and centered browser downloads, history, and bookmarks window
