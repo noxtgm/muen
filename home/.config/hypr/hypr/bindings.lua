@@ -7,6 +7,9 @@ local menu     = "hyprlauncher"
 hl.bind("SUPER + Q", hl.dsp.exec_cmd(terminal), { description = "Terminal" })
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd(menu), { description = "App launcher" })
 
+-- Session
+hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Lock screen" })
+
 -- Window management
 hl.bind("SUPER + SHIFT + Q", hl.dsp.window.close(), { description = "Close window" })
 hl.bind("SUPER + T", hl.dsp.window.float({ action = "toggle" }), { description = "Toggle floating" })
