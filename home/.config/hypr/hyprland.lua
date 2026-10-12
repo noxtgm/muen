@@ -1,4 +1,5 @@
 -- See https://wiki.hypr.land/Configuring/Start/
+
 require("hypr.environment")
 require("hypr.monitors")
 require("hypr.input")

@@ -20,10 +20,10 @@ hl.bind("SUPER + UP",    hl.dsp.focus({ direction = "u" }), { description = "Foc
 hl.bind("SUPER + DOWN",  hl.dsp.focus({ direction = "d" }), { description = "Focus down" })
 
 -- Move windows
-hl.bind("SUPER + SHIFT + LEFT",  hl.dsp.window.swap({ direction = "l" }), { description = "Move left" })
-hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.swap({ direction = "r" }), { description = "Move right" })
-hl.bind("SUPER + SHIFT + UP",    hl.dsp.window.swap({ direction = "u" }), { description = "Move up" })
-hl.bind("SUPER + SHIFT + DOWN",  hl.dsp.window.swap({ direction = "d" }), { description = "Move down" })
+hl.bind("SUPER + SHIFT + LEFT",  hl.dsp.window.move({ direction = "l" }), { description = "Move left" })
+hl.bind("SUPER + SHIFT + RIGHT", hl.dsp.window.move({ direction = "r" }), { description = "Move right" })
+hl.bind("SUPER + SHIFT + UP",    hl.dsp.window.move({ direction = "u" }), { description = "Move up" })
+hl.bind("SUPER + SHIFT + DOWN",  hl.dsp.window.move({ direction = "d" }), { description = "Move down" })
 
 -- Workspaces bound by key code so the number row works with any layout
 for workspace = 1, 10 do
