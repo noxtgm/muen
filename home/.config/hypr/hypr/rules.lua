@@ -93,8 +93,7 @@ hl.window_rule({
 -- Opening an empty scratchpad opens a terminal in it
 hl.workspace_rule({
     workspace        = "special:scratchpad",
-    on_created_empty = "ghostty",
-    gaps_out         = 40,
+    gaps_out         = 10,
 })
 
 -- Hide the launcher from screen sharing and open it instantly
