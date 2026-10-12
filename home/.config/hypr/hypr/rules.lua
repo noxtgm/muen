@@ -63,7 +63,7 @@ hl.window_rule({
 
 -- See https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
--- No border when a window is alone on its workspace or fullscreen
+-- No border when a window is alone on its workspace
 hl.window_rule({
     name  = "no-border-single",
     match = { float = false, workspace = "w[tv1]" },
@@ -72,10 +72,11 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name  = "no-border-fullscreen",
-    match = { float = false, workspace = "f[1]" },
+    name  = "highlight-maximized",
+    match = { fullscreen_state_internal = 1 },
 
-    border_size = 0,
+    border_size  = 2,
+    border_color = "rgb(e5a50a)",
 })
 
 -- OPening an empty scratchpad opens a terminal in it

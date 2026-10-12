@@ -9,6 +9,7 @@ hl.config({
         accel_profile = "flat",
 
         touchpad = {
+            natural_scroll       = true,
             clickfinger_behavior = true,
         },
 
