@@ -23,6 +23,8 @@ qt6-wayland
 quickshell
 ghostty
 xdg-terminal-exec
+brightnessctl
+playerctl
 
 librewolf
 tor
