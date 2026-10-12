@@ -20,7 +20,6 @@ hyprlauncher
 hyprpolkitagent
 hypridle
 hyprlock
-fprintd
 
 qt6-wayland
 quickshell
@@ -28,6 +27,7 @@ xdg-desktop-portal-hyprland
 xdg-terminal-exec
 brightnessctl
 playerctl
+fprintd
 
 librewolf
 tor
