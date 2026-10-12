@@ -72,6 +72,7 @@ hl.window_rule({
     border_size = 0,
 })
 
+-- Highlighted border when a window is maximized
 hl.window_rule({
     name  = "highlight-maximized",
     match = { fullscreen_state_internal = 1 },
@@ -80,7 +81,7 @@ hl.window_rule({
     border_color = "rgb(e5a50a)",
 })
 
--- OPening an empty scratchpad opens a terminal in it
+-- Opening an empty scratchpad opens a terminal in it
 hl.workspace_rule({
     workspace        = "special:scratchpad",
     on_created_empty = "ghostty",
