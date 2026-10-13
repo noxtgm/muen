@@ -1,0 +1,2 @@
+# Do not prompt for confirmation when closing ghostty
+confirm-close-surface = false
