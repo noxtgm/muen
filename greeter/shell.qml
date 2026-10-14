@@ -62,8 +62,10 @@ ShellRoot {
             }
 
             function onError(error) {
+                window.password = "";
                 window.status = error;
                 passwordField.text = "";
+                passwordField.forceActiveFocus();
             }
         }
 
