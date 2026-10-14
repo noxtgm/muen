@@ -55,9 +55,10 @@ keybind = ctrl+-=decrease_font_size:1
 keybind = ctrl+0=reset_font_size
 keybind = ctrl++=unbind
 
-# Config and inspector
+# Config, command palette and inspector
 keybind = ctrl+,=unbind
 keybind = ctrl+shift+,=unbind
+keybind = ctrl+p=toggle_command_palette
 keybind = ctrl+shift+i=unbind
 
 # Screen contents to file
