@@ -28,9 +28,9 @@ _boot_configure_cmdline() {
         return 0
     fi
 
-    printf '%s\n' "${updated[*]}" | sudo tee "$file" > /dev/null
+    files_write_root "$file" "${updated[*]}"
     if ! sudo mkinitcpio -P; then
-        printf '%s\n' "${current[*]}" | sudo tee "$file" > /dev/null
+        files_write_root "$file" "${current[*]}"
         die "Failed to rebuild the boot images, kernel command line left unchanged"
     fi
     log_info "Kernel command line updated"

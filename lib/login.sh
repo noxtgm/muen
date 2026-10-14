@@ -8,7 +8,7 @@ LOGIN_GREETER_DIR="/etc/greetd/quickshell"
 _login_install_greeter() {
     local src="${REPO_PATH}/greeter/shell.qml" dest="${LOGIN_GREETER_DIR}/shell.qml"
 
-    if [[ "$(sudo cat "$dest" 2> /dev/null)" == "$(cat "$src")" ]]; then
+    if sudo cmp -s "$src" "$dest"; then
         log_info "Greeter already up to date"
         return 0
     fi
@@ -35,12 +35,12 @@ user = "${user}"
 EOF
 )"
 
-    if [[ "$(sudo cat "$file" 2> /dev/null)" == "$content" ]]; then
+    if printf '%s\n' "$content" | sudo cmp -s - "$file"; then
         log_info "greetd already up to date"
         return 0
     fi
 
-    printf '%s\n' "$content" | sudo tee "$file" > /dev/null
+    files_write_root "$file" "$content"
     log_info "greetd configured"
 }
 
