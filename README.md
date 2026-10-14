@@ -28,6 +28,7 @@ The boot menu can still be accessed by holding space when powering on.
 | `bin/muen` | `muen` command |
 | `lib/` | Helpers sourced by `muen` |
 | `home/` | Configs, copied into `~` by `muen update` |
+| `greeter/` | Quickshell login screen |
 | `packages.pacman` | Official packages |
 | `packages.aur` | AUR packages |
 | `packages.npm` | npm packages |

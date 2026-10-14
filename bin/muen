@@ -50,6 +50,7 @@ cmd_update() {
     packages_install_npm
     shell_set_default
     boot_configure
+    login_configure
     dotfiles_update
 }
 
