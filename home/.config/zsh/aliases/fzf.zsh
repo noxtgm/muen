@@ -14,7 +14,7 @@ if (( $+commands[fzf] )); then
             local file="${selection%%:*}"
             local line="${selection#*:}"
             line="${line%%:*}"
-            nvim "+$line" "$file"
+            nvim "+$line" -- "$file"
         fi
     }
 fi
