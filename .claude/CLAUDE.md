@@ -10,7 +10,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 ## Disk encryption
 
-- LUKS encryption type
+- LUKS disk encryption
 
 # Swap
 
@@ -21,6 +21,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 - `Systemd-boot` bootloader
 - Enabled unified kernel images
+- Plymouth enabled with `bgrt`
 
 # Kernels
 
@@ -28,7 +29,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 # Additional firmware
 
-- Noto font
+- None
 
 # Authentication
 
@@ -64,7 +65,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 ## Additional fonts
 
-- TBA
+- noto-fonts
 
 # Network configuration
 
