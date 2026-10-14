@@ -36,7 +36,7 @@ hl.config({
     },
 
     misc = {
-        allow_session_lock_restore = true, -- Allow restarting hyprlock if it crashes, the session stays locked meanwhile
+        allow_session_lock_restore = true, -- Allow restarting hyprlock if it crashes (session stays locked meanwhile)
         disable_hyprland_logo      = true,
         disable_splash_rendering   = true,
         focus_on_activate          = true,

@@ -4,5 +4,5 @@ mouse-hide-while-typing = true
 # Selecting text copies it to the primary selection only pasted with shift+insert
 copy-on-select = true
 
-# One line per mouse wheel notch, touchpad scrolling is unchanged
+# One line per mouse wheel notch (touchpad scrolling is unchanged)
 mouse-scroll-multiplier = precision:1,discrete:1
