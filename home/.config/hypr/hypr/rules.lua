@@ -32,10 +32,10 @@ hl.window_rule({
     center = true,
 })
 
--- Hide the password prompt from screen sharing and keep focus on it until answered
+-- Hide the password and permission prompts from screen sharing and keep focus on them until answered
 hl.window_rule({
-    name  = "protect-polkit-prompt",
-    match = { class = "^hyprpolkitagent$" },
+    name  = "protect-system-prompts",
+    match = { class = "^(hyprpolkitagent|hyprland-dialog)$" },
 
     no_screen_share = true,
     stay_focused    = true,
