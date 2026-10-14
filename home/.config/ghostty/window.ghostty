@@ -1,2 +1,5 @@
 # Do not prompt for confirmation when closing ghostty
 confirm-close-surface = false
+
+# No title bar, taken over by Hyprland
+window-decoration = auto

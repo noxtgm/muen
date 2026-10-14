@@ -5,4 +5,4 @@ mouse-hide-while-typing = true
 copy-on-select = clipboard
 
 # One line per mouse wheel notch, touchpad scrolling is unchanged
-mouse-scroll-multiplier = discrete:1
+mouse-scroll-multiplier = precision:1,discrete:1

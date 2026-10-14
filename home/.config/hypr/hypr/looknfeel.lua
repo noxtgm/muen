@@ -2,6 +2,8 @@
 
 hl.config({
     general = {
+        layout = "dwindle",
+
         gaps_in     = 0,
         gaps_out    = 0,
         border_size = 2,
@@ -15,7 +17,8 @@ hl.config({
     },
 
     decoration = {
-        rounding = 0,
+        rounding    = 0,
+        dim_special = 0.2,
 
         shadow = {
             enabled = false,
@@ -38,9 +41,11 @@ hl.config({
         disable_splash_rendering   = true,
         focus_on_activate          = true,
         background_color           = "rgb(000000)",
+        vrr                        = 0,
     },
 
     cursor = {
+        sync_gsettings_theme     = true,
         hide_on_key_press        = true,
         inactive_timeout         = 5,
         warp_on_change_workspace = 1,
@@ -49,6 +54,11 @@ hl.config({
 
     binds = {
         hide_special_on_workspace_change = true,
+        workspace_back_and_forth         = false,
+    },
+
+    animations = {
+        enabled = true,
     },
 })
 

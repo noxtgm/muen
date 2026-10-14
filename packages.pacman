@@ -2,19 +2,6 @@ git
 7zip
 base-devel
 
-pnpm
-docker
-python
-
-eza
-fzf
-ripgrep
-zoxide
-
-zsh
-zsh-autosuggestions
-zsh-syntax-highlighting
-
 hyprland
 hyprlauncher
 hyprpolkitagent
@@ -25,17 +12,31 @@ qt6-wayland
 quickshell
 xdg-desktop-portal-hyprland
 xdg-terminal-exec
+
 brightnessctl
 playerctl
 fprintd
 
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+
+eza
+fzf
+ripgrep
+zoxide
+
+ghostty
+
+pnpm
+docker
+python
+
 librewolf
 tor
 
-zed
 neovim
-
-ghostty
+zed
 
 obsidian
 
