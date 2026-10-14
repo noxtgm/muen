@@ -15,6 +15,8 @@ hl.config({
     },
 
     decoration = {
+        rounding = 0,
+
         shadow = {
             enabled = false,
         },
@@ -40,7 +42,7 @@ hl.config({
 
     cursor = {
         hide_on_key_press        = true,
-        inactive_timeout         = 3,
+        inactive_timeout         = 5,
         warp_on_change_workspace = 1,
         warp_on_toggle_special   = 1,
     },
@@ -53,6 +55,7 @@ hl.config({
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Animations/
 
 hl.curve("easeOutQuint", { type = "bezier", points = { { 0.23, 1 },   { 0.32, 1 } } })
+hl.curve("linear",       { type = "bezier", points = { { 0, 0 },      { 1, 1 } } })
 hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 },  { 0.75, 1 } } })
 hl.curve("quick",        { type = "bezier", points = { { 0.15, 0 },   { 0.1, 1 } } })
 

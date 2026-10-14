@@ -49,6 +49,7 @@ cmd_update() {
     packages_install_aur
     packages_install_npm
     shell_set_default
+    boot_configure
     dotfiles_update
 }
 

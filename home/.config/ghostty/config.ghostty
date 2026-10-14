@@ -1,5 +1,6 @@
 # See https://ghostty.org/docs/config
 
 config-file = bindings.ghostty
+config-file = font.ghostty
 config-file = mouse.ghostty
 config-file = window.ghostty

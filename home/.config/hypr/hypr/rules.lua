@@ -90,10 +90,10 @@ hl.window_rule({
     border_color = "rgb(e5a50a)",
 })
 
--- Opening an empty scratchpad opens a terminal in it
+-- Opening an empty scratchpad adds an outer gap
 hl.workspace_rule({
     workspace        = "special:scratchpad",
-    gaps_out         = 10,
+    gaps_out         = 20,
 })
 
 -- Hide the launcher from screen sharing and open it instantly
