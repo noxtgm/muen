@@ -3,9 +3,13 @@
 # See https://wiki.archlinux.org/title/Silent_boot
 BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3)
 
+# Hide the boot menu and stop boot options from being edited from it
+BOOT_LOADER_OPTIONS=("timeout 0" "editor no")
+
 BOOT_CMDLINE_FILE="/etc/kernel/cmdline"
 BOOT_PRESET_FILE="/etc/mkinitcpio.d/linux.preset"
 
+# Prints the command line with BOOT_CMDLINE_PARAMS added, replacing any other value for the same key
 _boot_cmdline() {
     local -a current=() updated=()
     local token param drop
@@ -28,8 +32,25 @@ _boot_cmdline() {
     printf '%s' "${updated[*]}"
 }
 
+# Prints the preset without the Arch logo splash archinstall embeds in the boot image
 _boot_preset() {
     printf '%s' "$1" | sed -E 's/^(default_options=".*)--splash[= ][^ "]*[[:space:]]*/\1/'
+}
+
+# Prints the boot loader configuration replacing an existing line for the same key
+_boot_loader() {
+    local content="$1" option key
+
+    for option in "${BOOT_LOADER_OPTIONS[@]}"; do
+        key="${option%% *}"
+        if grep -q "^${key}\b" <<< "$content"; then
+            content="$(sed -E "s/^${key}\b.*/${option}/" <<< "$content")"
+        else
+            content="${content:+${content}$'\n'}${option}"
+        fi
+    done
+
+    printf '%s' "$content"
 }
 
 # Updates the kernel command line and the preset then rebuilds the boot images once if either changed
@@ -61,40 +82,20 @@ _boot_configure_images() {
     log_info "Boot images updated"
 }
 
-# Sets key value pair in the boot loader configuration replacing an existing line for the same key
-_boot_set_loader_option() {
-    local file="$1" key="$2" value="$3"
-
-    if sudo grep -qx "${key} ${value}" "$file"; then
-        return 1
-    fi
-
-    if sudo grep -q "^${key}\b" "$file"; then
-        sudo sed -i "s/^${key}\b.*/${key} ${value}/" "$file" \
-            || die "Failed to set ${key} in ${file}"
-    else
-        printf '%s %s\n' "$key" "$value" | sudo tee -a "$file" > /dev/null \
-            || die "Failed to set ${key} in ${file}"
-    fi
-}
-
-# Hides the boot menu and stops boot options from being edited from it
 _boot_configure_loader() {
-    local file changed=0
+    local file loader_old loader_new
     file="$(sudo bootctl --print-esp-path)/loader/loader.conf"
 
-    if _boot_set_loader_option "$file" timeout 0; then
-        changed=1
-    fi
-    if _boot_set_loader_option "$file" editor no; then
-        changed=1
+    loader_old="$(sudo cat "$file")"
+    loader_new="$(_boot_loader "$loader_old")"
+
+    if [[ "$loader_new" == "$loader_old" ]]; then
+        log_info "Boot menu already up to date"
+        return 0
     fi
 
-    if (( changed )); then
-        log_info "Boot menu updated"
-    else
-        log_info "Boot menu already up to date"
-    fi
+    files_write_root "$file" "$loader_new" ""
+    log_info "Boot menu updated"
 }
 
 boot_configure() {
