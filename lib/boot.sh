@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # See https://wiki.archlinux.org/title/Silent_boot
-BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3)
+BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0)
 
 # Hide the boot menu and stop boot options from being edited from it
 BOOT_LOADER_OPTIONS=("timeout 0" "editor no")
