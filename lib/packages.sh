@@ -1,13 +1,19 @@
 #!/bin/bash
 
 _read_packages() {
-    awk '{ for (i = 1; i <= NF; i++) print $i }' "$1"
+    local file="$1"
+    local -n _read_packages_out="$2"
+
+    if [[ ! -f "$file" ]]; then
+        die "${file} not found"
+    fi
+    mapfile -t _read_packages_out < <(awk '{ for (i = 1; i <= NF; i++) print $i }' "$file")
 }
 
 packages_install_pacman() {
     local pkgs
     log_step "Installing pacman packages"
-    mapfile -t pkgs < <(_read_packages "${REPO_PATH}/packages.pacman")
+    _read_packages "${REPO_PATH}/packages.pacman" pkgs
     if (( ${#pkgs[@]} == 0 )); then
         log_info "Nothing to install"
         return 0
@@ -32,7 +38,7 @@ _packages_install_yay() {
 packages_install_aur() {
     local pkgs
     log_step "Installing AUR packages"
-    mapfile -t pkgs < <(_read_packages "${REPO_PATH}/packages.aur")
+    _read_packages "${REPO_PATH}/packages.aur" pkgs
     if (( ${#pkgs[@]} == 0 )); then
         log_info "Nothing to install"
         return 0
@@ -49,7 +55,7 @@ packages_install_aur() {
 packages_install_npm() {
     local pkgs
     log_step "Installing npm packages"
-    mapfile -t pkgs < <(_read_packages "${REPO_PATH}/packages.npm")
+    _read_packages "${REPO_PATH}/packages.npm" pkgs
     if (( ${#pkgs[@]} == 0 )); then
         log_info "Nothing to install"
         return 0
