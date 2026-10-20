@@ -23,35 +23,6 @@ packages_install_pacman() {
     log_info "${#pkgs[@]} packages up to date"
 }
 
-_packages_install_yay() {
-    log_info "Installing yay"
-    (
-        build_dir="$(mktemp -d)"
-        trap 'rm -rf "$build_dir"' EXIT
-        git clone --depth 1 https://aur.archlinux.org/yay-bin.git "$build_dir"
-        cd "$build_dir" || exit
-        makepkg -sri --noconfirm
-    )
-    log_info "yay installed"
-}
-
-packages_install_aur() {
-    local pkgs
-    log_step "Installing AUR packages"
-    _read_packages "${REPO_PATH}/packages.aur" pkgs
-    if (( ${#pkgs[@]} == 0 )); then
-        log_info "Nothing to install"
-        return 0
-    fi
-
-    if ! command -v yay > /dev/null; then
-        _packages_install_yay
-    fi
-
-    yay -S --needed --noconfirm --answerclean None --answerdiff None "${pkgs[@]}"
-    log_info "${#pkgs[@]} packages up to date"
-}
-
 packages_install_npm() {
     local pkgs
     log_step "Installing npm packages"
