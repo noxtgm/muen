@@ -37,8 +37,8 @@ packages_install_npm() {
     _read_packages "${REPO_PATH}/packages.npm" pkgs
 
     for pkg in "${pkgs[@]}"; do
-        if [[ "$pkg" == !* ]]; then
-            pkg="${pkg#!}"
+        if [[ "$pkg" == *+ ]]; then
+            pkg="${pkg%+}"
             builds+=("--allow-build=${pkg}")
         fi
         if [[ ! "$pkg" =~ $_NPM_NAME_RE ]]; then
@@ -73,9 +73,10 @@ packages_install_npm() {
 
     if (( ${#names[@]} == 0 )); then
         log_info "Nothing to install"
-        return 0
+    else
+        _pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${builds[@]}" "${names[@]}"
+        log_info "${#names[@]} package(s) up to date"
     fi
 
-    _pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${builds[@]}" "${names[@]}"
-    log_info "${#names[@]} packages up to date"
+    _pnpm store prune
 }
