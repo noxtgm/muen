@@ -9,6 +9,10 @@ shell_set_default() {
         return 0
     fi
 
+    if [[ ! -x "$zsh_path" ]] || ! grep -qxF "$zsh_path" /etc/shells; then
+        die "$zsh_path is not installed or not listed in /etc/shells"
+    fi
+
     sudo chsh -s "$zsh_path" "$user"
     log_info "Default shell set to zsh, log in again to use it"
 }

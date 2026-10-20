@@ -25,10 +25,10 @@ The boot menu can still be accessed by holding space when powering on.
 | Path | Contents |
 |---|---|
 | `install.sh` | Entry point |
-| `bin/muen` | `muen` command |
+| `bin/` | `muen` command |
 | `lib/` | Helpers sourced by `muen` |
 | `home/` | Configs, copied into `~` by `muen update` |
-| `greeter/` | Quickshell login screen |
-| `packages.pacman` | Official packages |
+| `greeter/` | Login screen |
 | `packages.aur` | AUR packages |
 | `packages.npm` | npm packages |
+| `packages.pacman` | Official packages |
