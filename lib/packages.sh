@@ -42,7 +42,6 @@ packages_install_npm() {
     done
 
     export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
-    export PATH="${PNPM_HOME}/bin:${PATH}"
-    pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${builds[@]}" "${names[@]}"
+    PATH="${PATH}:${PNPM_HOME}/bin" pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${builds[@]}" "${names[@]}"
     log_info "${#pkgs[@]} packages up to date"
 }

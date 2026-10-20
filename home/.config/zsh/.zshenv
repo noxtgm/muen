@@ -4,4 +4,4 @@ export TERMINAL="ghostty"
 export PNPM_HOME="$HOME/.local/share/pnpm"
 
 typeset -U path
-path=("$PNPM_HOME/bin" "$HOME/.local/bin" $path)
+path=($path "$PNPM_HOME/bin" "$HOME/.local/bin")
