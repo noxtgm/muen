@@ -24,7 +24,8 @@ packages_install_pacman() {
 }
 
 packages_install_npm() {
-    local pkgs
+    local pkgs pkg
+    local -a names=() builds=()
     log_step "Installing npm packages"
     _read_packages "${REPO_PATH}/packages.npm" pkgs
     if (( ${#pkgs[@]} == 0 )); then
@@ -32,8 +33,16 @@ packages_install_npm() {
         return 0
     fi
 
+    for pkg in "${pkgs[@]}"; do
+        if [[ "$pkg" == !* ]]; then
+            pkg="${pkg#!}"
+            builds+=("--allow-build=${pkg}")
+        fi
+        names+=("$pkg")
+    done
+
     export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
     export PATH="${PNPM_HOME}/bin:${PATH}"
-    pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${pkgs[@]/#/--allow-build=}" "${pkgs[@]}"
+    pnpm add --global --config.minimumReleaseAge=1440 --config.minimumReleaseAgeStrict=true "${builds[@]}" "${names[@]}"
     log_info "${#pkgs[@]} packages up to date"
 }
