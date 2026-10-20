@@ -22,7 +22,7 @@ packages_install_pacman() {
     fi
 
     sudo pacman -Syu --needed --noconfirm "${pkgs[@]}"
-    log_info "${#pkgs[@]} packages up to date"
+    log_info "${#pkgs[@]} package(s) up to date"
 }
 
 _pnpm() {
@@ -62,7 +62,7 @@ packages_install_npm() {
 
     if (( ${#stale[@]} > 0 )); then
         _pnpm remove --global "${stale[@]}"
-        log_info "Removed ${#stale[@]} unlisted packages"
+        log_info "Removed ${#stale[@]} unlisted package(s)"
     fi
 
     global_dir="$(_pnpm root --global)"

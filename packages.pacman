@@ -1,10 +1,5 @@
-7zip
-btop
-base-devel
-
 cage
 greetd
-
 qt6-wayland
 quickshell
 xdg-desktop-portal-hyprland
@@ -24,11 +19,13 @@ zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
 
+btop
 eza
 fzf
 ripgrep
 zoxide
 
+7zip
 pnpm
 docker
 python
