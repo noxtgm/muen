@@ -45,8 +45,7 @@ cmd_update() {
         exec "${REPO_PATH}/bin/muen" update "$@"
     fi
 
-    packages_install_pacman
-    packages_install_npm
+    packages_install
     shell_set_default
     boot_configure
     login_configure

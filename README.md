@@ -29,5 +29,4 @@ The boot menu can still be accessed by holding space when powering on.
 | `lib/` | Helpers sourced by `muen` |
 | `home/` | Configs, copied into `~` by `muen update` |
 | `greeter/` | Login screen |
-| `packages.npm` | Global npm packages, a trailing `+` allows install scripts, unlisted ones are removed |
-| `packages.pacman` | Official packages |
+| `packages` | Official packages |
