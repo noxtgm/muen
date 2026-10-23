@@ -6,15 +6,16 @@ LOGIN_GREETER_DIR="/etc/greetd/quickshell"
 
 # Installs the greeter, the greeter user cannot read files in the user's home
 _login_install_greeter() {
-    local src="${REPO_PATH}/greeter/shell.qml" dest="${LOGIN_GREETER_DIR}/shell.qml"
+    local src="${REPO_PATH}/greeter/shell.qml" dest="${LOGIN_GREETER_DIR}/shell.qml" content
+    content="$(cat "$src")"
 
-    if sudo cmp -s "$src" "$dest"; then
+    if printf '%s\n' "$content" | sudo cmp -s - "$dest"; then
         log_info "Greeter already up to date"
         return 0
     fi
 
     sudo install -d -m 755 "$LOGIN_GREETER_DIR"
-    files_write_root "$dest" "$(cat "$src")"
+    files_write_root "$dest" "$content"
     log_info "Greeter installed"
 }
 

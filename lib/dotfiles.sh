@@ -13,6 +13,15 @@ _dotfiles_backup() {
     log_warn "Backed up ~/${rel} to ${backup_dir}/${rel}"
 }
 
+# Removes the directories a deleted config leaves empty, stopping at the first non-empty one
+_dotfiles_prune() {
+    local dir
+    dir="$(dirname "$1")"
+    while [[ "$dir" != . ]] && rmdir -- "${HOME}/${dir}" 2>/dev/null; do
+        dir="$(dirname "$dir")"
+    done
+}
+
 dotfiles_update() {
     local src="${REPO_PATH}/home"
     local backup_dir
@@ -77,9 +86,12 @@ dotfiles_update() {
         # Replaced through a rename so programs reading it live never see it missing or half written
         mkdir -p "$(dirname "$target")"
         tmp="$(mktemp "${target}.XXXXXX")"
-        cp "${src}/${rel}" "$tmp"
-        chmod --reference="${src}/${rel}" "$tmp"
-        mv -f "$tmp" "$target"
+        if ! { cp "${src}/${rel}" "$tmp" \
+            && chmod --reference="${src}/${rel}" "$tmp" \
+            && mv -f "$tmp" "$target"; }; then
+            rm -f "$tmp"
+            die "Failed to install ~/${rel}"
+        fi
         deployed["$rel"]="$repo_hash"
         (( ++installed ))
     done
@@ -93,9 +105,11 @@ dotfiles_update() {
             continue
         elif [[ -f "$target" && ! -L "$target" && "$(_dotfiles_hash "$target")" == "${recorded[$rel]}" ]]; then
             rm -f "$target"
+            _dotfiles_prune "$rel"
             (( ++deleted ))
         elif [[ "$REPO_FORCE" == 1 ]]; then
             _dotfiles_backup "$rel" "$backup_dir"
+            _dotfiles_prune "$rel"
             (( ++deleted ))
         elif [[ -L "$target" || ! -f "$target" ]]; then
             conflicts+=("~/${rel}: not a regular file, removed from repo")
@@ -106,7 +120,6 @@ dotfiles_update() {
         fi
     done
 
-    mkdir -p "$(dirname "$REPO_DEPLOYED")"
     for rel in "${!deployed[@]}"; do
         printf '%s  %s\n' "${deployed[$rel]}" "$rel"
     done | sort -k2 > "${REPO_DEPLOYED}.tmp"

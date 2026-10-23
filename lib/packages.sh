@@ -11,7 +11,7 @@ _read_packages() {
 }
 
 packages_install() {
-    local pkgs
+    local -a pkgs
     log_step "Installing pacman packages"
     _read_packages "${REPO_PATH}/packages" pkgs
     if (( ${#pkgs[@]} == 0 )); then

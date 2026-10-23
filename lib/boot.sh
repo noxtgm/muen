@@ -1,21 +1,30 @@
 #!/bin/bash
 
 # See https://wiki.archlinux.org/title/Silent_boot
-BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 vt.global_cursor_default=0)
+BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3)
 
 # Hide the boot menu and stop boot options from being edited from it
 BOOT_LOADER_OPTIONS=("timeout 0" "editor no")
 
 BOOT_CMDLINE_FILE="/etc/kernel/cmdline"
 BOOT_PRESET_FILE="/etc/mkinitcpio.d/linux.preset"
+# Present while a rebuild is unfinished so an interrupted run retries it
+BOOT_PENDING_FILE="${REPO_STATE}/boot-rebuild-pending"
 
 # Prints the command line with BOOT_CMDLINE_PARAMS added, replacing any other value for the same key
 _boot_cmdline() {
-    local -a current=() updated=()
-    local token param drop
+    local -a current=() tokens=() updated=()
+    local line token param drop
 
-    # mkinitcpio accepts parameters spread over several lines
-    read -ra current <<< "${1//$'\n'/ }"
+    # mkinitcpio skips lines starting with # and joins the rest
+    while IFS= read -r line; do
+        if [[ "$line" == \#* ]]; then
+            continue
+        fi
+        read -ra tokens <<< "$line"
+        current+=("${tokens[@]}")
+    done <<< "$1"
+
     for token in "${current[@]}"; do
         drop=0
         for param in "${BOOT_CMDLINE_PARAMS[@]}"; do
@@ -58,27 +67,30 @@ _boot_configure_images() {
     local cmdline_old cmdline_new preset_old preset_new
 
     cmdline_old="$(sudo cat "$BOOT_CMDLINE_FILE")"
-    # Without the root and disk unlock parameters the rebuilt boot image would not boot
-    if [[ -z "${cmdline_old//[[:space:]]/}" ]]; then
-        die "${BOOT_CMDLINE_FILE} is empty, refusing to rebuild the boot images"
+    # Without the root and disk unlock parameters the rebuilt boot images would not boot
+    if [[ -z "$(sed '/^#/d' <<< "$cmdline_old" | tr -d '[:space:]')" ]]; then
+        die "${BOOT_CMDLINE_FILE} has no parameters, refusing to rebuild the boot images"
     fi
     preset_old="$(sudo cat "$BOOT_PRESET_FILE")"
     cmdline_new="$(_boot_cmdline "$cmdline_old")"
     preset_new="$(_boot_preset "$preset_old")"
 
-    if [[ "$cmdline_new" == "$cmdline_old" && "$preset_new" == "$preset_old" ]]; then
+    if [[ "$cmdline_new" == "$cmdline_old" && "$preset_new" == "$preset_old" && ! -e "$BOOT_PENDING_FILE" ]]; then
         log_info "Boot images already up to date"
         return 0
     fi
 
+    touch "$BOOT_PENDING_FILE"
     files_write_root "$BOOT_CMDLINE_FILE" "$cmdline_new"
     files_write_root "$BOOT_PRESET_FILE" "$preset_new"
     # Rebuild the boot images with the new settings restoring the old ones if that fails
     if ! sudo mkinitcpio -P; then
+        log_error "Failed to rebuild the boot images"
         files_write_root "$BOOT_CMDLINE_FILE" "$cmdline_old"
         files_write_root "$BOOT_PRESET_FILE" "$preset_old"
-        die "Failed to rebuild the boot images, boot settings left unchanged"
+        die "Boot settings restored"
     fi
+    rm -f "$BOOT_PENDING_FILE"
     log_info "Boot images updated"
 }
 
