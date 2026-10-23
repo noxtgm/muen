@@ -22,13 +22,26 @@ _dotfiles_prune() {
     done
 }
 
+# Prints the part of a config's path that exists but is not a directory, if any
+_dotfiles_blocker() {
+    local dir
+    dir="$(dirname "$1")"
+    while [[ "$dir" != . ]]; do
+        if [[ ( -e "${HOME}/${dir}" || -L "${HOME}/${dir}" ) && ! -d "${HOME}/${dir}" ]]; then
+            printf '%s' "$dir"
+            return 0
+        fi
+        dir="$(dirname "$dir")"
+    done
+}
+
 dotfiles_update() {
     local src="${REPO_PATH}/home"
     local backup_dir
     backup_dir="${REPO_BACKUPS}/$(date '+%Y%m%d-%H%M%S')"
     local -A recorded=() deployed=() in_repo=()
     local -a files=() conflicts=()
-    local rel hash target tmp local_hash repo_hash reason
+    local rel hash target tmp local_hash repo_hash reason blocker
     local installed=0 kept=0 deleted=0
 
     log_step "Applying configs"
@@ -47,11 +60,41 @@ dotfiles_update() {
 
     for rel in "${files[@]}"; do
         in_repo["$rel"]=1
+    done
+
+    # Files removed from home/ since the last update, removed first so a new config can take their place
+    for rel in "${!recorded[@]}"; do
+        [[ -n "${in_repo[$rel]:-}" ]] && continue
+        target="${HOME}/${rel}"
+
+        if [[ ! -e "$target" && ! -L "$target" ]]; then
+            continue
+        elif [[ -f "$target" && ! -L "$target" && "$(_dotfiles_hash "$target")" == "${recorded[$rel]}" ]]; then
+            rm -f "$target"
+            _dotfiles_prune "$rel"
+            (( ++deleted ))
+        elif [[ "$REPO_FORCE" == 1 ]]; then
+            _dotfiles_backup "$rel" "$backup_dir"
+            _dotfiles_prune "$rel"
+            (( ++deleted ))
+        elif [[ -L "$target" || ! -f "$target" ]]; then
+            conflicts+=("~/${rel}: not a regular file, removed from repo")
+            deployed["$rel"]="${recorded[$rel]}"
+        else
+            conflicts+=("~/${rel}: edited locally, removed from repo")
+            deployed["$rel"]="${recorded[$rel]}"
+        fi
+    done
+
+    for rel in "${files[@]}"; do
         target="${HOME}/${rel}"
         repo_hash="$(_dotfiles_hash "${src}/${rel}")"
         reason=""
+        blocker="$(_dotfiles_blocker "$rel")"
 
-        if [[ -L "$target" || ( -e "$target" && ! -f "$target" ) ]]; then
+        if [[ -n "$blocker" ]]; then
+            reason="~/${blocker} is not a directory"
+        elif [[ -L "$target" || ( -e "$target" && ! -f "$target" ) ]]; then
             reason="not a regular file"
         elif [[ -f "$target" ]]; then
             local_hash="$(_dotfiles_hash "$target")"
@@ -80,7 +123,7 @@ dotfiles_update() {
                 fi
                 continue
             fi
-            _dotfiles_backup "$rel" "$backup_dir"
+            _dotfiles_backup "${blocker:-$rel}" "$backup_dir"
         fi
 
         # Replaced through a rename so programs reading it live never see it missing or half written
@@ -94,30 +137,6 @@ dotfiles_update() {
         fi
         deployed["$rel"]="$repo_hash"
         (( ++installed ))
-    done
-
-    # Files removed from home/ since the last update
-    for rel in "${!recorded[@]}"; do
-        [[ -n "${in_repo[$rel]:-}" ]] && continue
-        target="${HOME}/${rel}"
-
-        if [[ ! -e "$target" && ! -L "$target" ]]; then
-            continue
-        elif [[ -f "$target" && ! -L "$target" && "$(_dotfiles_hash "$target")" == "${recorded[$rel]}" ]]; then
-            rm -f "$target"
-            _dotfiles_prune "$rel"
-            (( ++deleted ))
-        elif [[ "$REPO_FORCE" == 1 ]]; then
-            _dotfiles_backup "$rel" "$backup_dir"
-            _dotfiles_prune "$rel"
-            (( ++deleted ))
-        elif [[ -L "$target" || ! -f "$target" ]]; then
-            conflicts+=("~/${rel}: not a regular file, removed from repo")
-            deployed["$rel"]="${recorded[$rel]}"
-        else
-            conflicts+=("~/${rel}: edited locally, removed from repo")
-            deployed["$rel"]="${recorded[$rel]}"
-        fi
     done
 
     for rel in "${!deployed[@]}"; do

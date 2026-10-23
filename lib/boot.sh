@@ -83,12 +83,8 @@ _boot_configure_images() {
     touch "$BOOT_PENDING_FILE"
     files_write_root "$BOOT_CMDLINE_FILE" "$cmdline_new"
     files_write_root "$BOOT_PRESET_FILE" "$preset_new"
-    # Rebuild the boot images with the new settings restoring the old ones if that fails
     if ! sudo mkinitcpio -P; then
-        log_error "Failed to rebuild the boot images"
-        files_write_root "$BOOT_CMDLINE_FILE" "$cmdline_old"
-        files_write_root "$BOOT_PRESET_FILE" "$preset_old"
-        die "Boot settings restored"
+        die "Failed to rebuild the boot images, they may be incomplete, do not reboot until \`muen update\` or \`sudo mkinitcpio -P\` succeeds"
     fi
     rm -f "$BOOT_PENDING_FILE"
     log_info "Boot images updated"
