@@ -58,7 +58,7 @@ ShellRoot {
             }
 
             function onReadyToLaunch() {
-                Greetd.launch(["zsh", "-c", "exec systemd-cat --identifier=hyprland start-hyprland"]);
+                Greetd.launch(["zsh -c 'exec systemd-cat --identifier=hyprland start-hyprland'"]);
             }
 
             function onError(error) {

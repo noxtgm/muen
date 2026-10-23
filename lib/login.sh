@@ -13,7 +13,8 @@ _login_install_greeter() {
         return 0
     fi
 
-    sudo install -Dm644 "$src" "$dest"
+    sudo install -d -m 755 "$LOGIN_GREETER_DIR"
+    files_write_root "$dest" "$(cat "$src")"
     log_info "Greeter installed"
 }
 
