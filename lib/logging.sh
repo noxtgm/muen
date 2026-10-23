@@ -24,6 +24,13 @@ log_error() {
     _log_to_file ERROR "$1"
 }
 
+log_failure() {
+    local status="$1" command="$2" source="$3" line="$4"
+    if (( BASHPID == $$ )); then
+        log_error "Command failed with exit code ${status} at ${source#"${REPO_PATH}/"}:${line}: ${command}"
+    fi
+}
+
 die() {
     log_error "$1"
     exit 1

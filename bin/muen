@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -Eeuo pipefail
 
 REPO_NAME="${REPO_NAME:-muen}"
 REPO_PATH="$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")"
@@ -11,6 +11,8 @@ REPO_BACKUPS="${REPO_STATE}/backups"
 REPO_FORCE=0
 
 source "${REPO_LIB}/init.sh"
+
+trap 'log_failure "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
 
 if (( EUID == 0 )); then
     die "Run muen as your user, not as root"
