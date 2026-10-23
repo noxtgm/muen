@@ -1,7 +1,7 @@
 hl.config({
     input = {
         kb_layout  = "us",
-        kb_variant = "intl",
+        kb_variant = "altgr-intl",
 
         repeat_rate  = 40,
         repeat_delay = 300,
