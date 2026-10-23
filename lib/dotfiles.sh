@@ -2,7 +2,7 @@
 
 _dotfiles_hash() {
     local hash
-    hash="$(sha256sum < "$1")"
+    hash="$(sha256sum < "$1")" || return
     echo "${hash%% *}"
 }
 
@@ -19,7 +19,7 @@ dotfiles_update() {
     backup_dir="${REPO_BACKUPS}/$(date '+%Y%m%d-%H%M%S')"
     local -A recorded=() deployed=() in_repo=()
     local -a files=() conflicts=()
-    local rel hash target local_hash repo_hash reason
+    local rel hash target tmp local_hash repo_hash reason
     local installed=0 kept=0 deleted=0
 
     log_step "Applying configs"
@@ -74,8 +74,12 @@ dotfiles_update() {
             _dotfiles_backup "$rel" "$backup_dir"
         fi
 
+        # Replaced through a rename so programs reading it live never see it missing or half written
         mkdir -p "$(dirname "$target")"
-        cp --remove-destination "${src}/${rel}" "$target"
+        tmp="$(mktemp "${target}.XXXXXX")"
+        cp "${src}/${rel}" "$tmp"
+        chmod --reference="${src}/${rel}" "$tmp"
+        mv -f "$tmp" "$target"
         deployed["$rel"]="$repo_hash"
         (( ++installed ))
     done
@@ -93,6 +97,9 @@ dotfiles_update() {
         elif [[ "$REPO_FORCE" == 1 ]]; then
             _dotfiles_backup "$rel" "$backup_dir"
             (( ++deleted ))
+        elif [[ -L "$target" || ! -f "$target" ]]; then
+            conflicts+=("~/${rel}: not a regular file, removed from repo")
+            deployed["$rel"]="${recorded[$rel]}"
         else
             conflicts+=("~/${rel}: edited locally, removed from repo")
             deployed["$rel"]="${recorded[$rel]}"
@@ -111,7 +118,6 @@ dotfiles_update() {
         for reason in "${conflicts[@]}"; do
             log_error "$reason"
         done
-        log_error "${#conflicts[@]} conflicting configs were skipped and left untouched, remove them or run \`muen update --force\` to back them up to ${REPO_BACKUPS}/ and overwrite them"
-        return 1
+        die "${#conflicts[@]} conflicting configs were skipped and left untouched, remove them or run \`muen update --force\` to back them up to ${REPO_BACKUPS}/ and overwrite them"
     fi
 }
