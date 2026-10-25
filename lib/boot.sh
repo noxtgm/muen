@@ -13,10 +13,9 @@ BOOT_PENDING_FILE="${REPO_STATE}/boot-rebuild-pending"
 
 # Prints the command line with BOOT_CMDLINE_PARAMS added, replacing any other value for the same key
 _boot_cmdline() {
-    local -a current=() tokens=() updated=()
+    local -a current=() tokens=() updated=("${BOOT_CMDLINE_PARAMS[@]}")
     local line token param drop
 
-    # mkinitcpio skips lines starting with # and joins the rest
     while IFS= read -r line; do
         if [[ "$line" == \#* ]]; then
             continue
@@ -36,7 +35,6 @@ _boot_cmdline() {
             updated+=("$token")
         fi
     done
-    updated+=("${BOOT_CMDLINE_PARAMS[@]}")
 
     printf '%s' "${updated[*]}"
 }

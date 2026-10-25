@@ -1,16 +1,22 @@
 #!/bin/bash
 
+# Prints the mode with the content hash so a mode change counts as a change
 _dotfiles_hash() {
-    local hash
+    local mode hash
+    mode="$(stat -c %a -- "$1")" || return
     hash="$(sha256sum < "$1")" || return
-    echo "${hash%% *}"
+    echo "${mode}:${hash%% *}"
 }
 
 _dotfiles_backup() {
-    local rel="$1" backup_dir="$2"
-    mkdir -p "$(dirname "${backup_dir}/${rel}")"
-    mv "${HOME}/${rel}" "${backup_dir}/${rel}"
-    log_warn "Backed up ~/${rel} to ${backup_dir}/${rel}"
+    local rel="$1" backup_dir="$2" dest i=1
+    dest="${backup_dir}/${rel}"
+    while [[ -e "$dest" || -L "$dest" ]]; do
+        dest="${backup_dir}/${rel}.$(( i++ ))"
+    done
+    mkdir -p "$(dirname "$dest")"
+    mv "${HOME}/${rel}" "$dest"
+    log_warn "Backed up ~/${rel} to ${dest}"
 }
 
 # Removes the directories a deleted config leaves empty, stopping at the first non-empty one

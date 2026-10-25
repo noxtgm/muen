@@ -7,9 +7,9 @@ xdg-terminal-exec
 
 hyprland
 hyprlauncher
-hyprpolkitagent
-hypridle
 hyprlock
+hypridle
+hyprpolkitagent
 
 brightnessctl
 playerctl
@@ -19,16 +19,16 @@ zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
 
-btop
 eza
 fzf
 ripgrep
 zoxide
 
 7zip
+btop
+docker
 nodejs
 pnpm
-docker
 python
 
 ghostty
