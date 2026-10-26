@@ -1,4 +1,6 @@
-This project is specifically configured and tuned to be installed on the latest version of Arch Linux that was installed fresh using `archinstall`. With the following archinstall configuration:
+# Context
+
+This project is specifically configured and tuned to be installed on the latest version of Arch Linux freshly installed using `archinstall` and the following archinstall configuration:
 
 # Disk configuration
 
@@ -10,7 +12,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 ## Disk encryption
 
-- LUKS disk encryption
+- Enabled LUKS disk encryption
 
 # Swap
 
@@ -21,7 +23,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 - `Systemd-boot` bootloader
 - Enabled unified kernel images
-- Plymouth enabled with `bgrt`
+- Enabled Plymouth with `bgrt` template
 
 # Kernels
 
@@ -69,7 +71,7 @@ This project is specifically configured and tuned to be installed on the latest 
 
 # Network configuration
 
-- Use Network Manager (default backend)
+- Network Manager (default backend)
 
 # Additional packages
 

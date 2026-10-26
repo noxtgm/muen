@@ -10,7 +10,7 @@ REPO_PATH="${REPO_PATH:-$HOME/.local/share/${REPO_NAME}}"
 reboot_countdown() {
     local i
     for (( i = 10; i > 0; i-- )); do
-        printf '\rRebooting in %2d seconds, press Ctrl-C to cancel' "$i"
+        printf '\rRebooting in %2d seconds... press Ctrl-C to cancel' "$i"
         sleep 1
     done
     printf '\n'

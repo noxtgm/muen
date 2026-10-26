@@ -13,7 +13,7 @@ _read_packages() {
 packages_install() {
     local -a pkgs
     log_step "Installing pacman packages"
-    _read_packages "${REPO_PATH}/packages" pkgs
+    _read_packages "${REPO_PATH}/pacman.pkgs" pkgs
     if (( ${#pkgs[@]} == 0 )); then
         log_info "Nothing to install"
         return 0

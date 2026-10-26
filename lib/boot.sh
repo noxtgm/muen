@@ -3,12 +3,10 @@
 # See https://wiki.archlinux.org/title/Silent_boot
 BOOT_CMDLINE_PARAMS=(quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3)
 
-# Hide the boot menu and stop boot options from being edited from it
 BOOT_LOADER_OPTIONS=("timeout 0" "editor no")
 
 BOOT_CMDLINE_FILE="/etc/kernel/cmdline"
 BOOT_PRESET_FILE="/etc/mkinitcpio.d/linux.preset"
-# Present while a rebuild is unfinished so an interrupted run retries it
 BOOT_PENDING_FILE="${REPO_STATE}/boot-rebuild-pending"
 
 # Prints the command line with BOOT_CMDLINE_PARAMS added, replacing any other value for the same key
@@ -65,7 +63,6 @@ _boot_configure_images() {
     local cmdline_old cmdline_new preset_old preset_new
 
     cmdline_old="$(sudo cat "$BOOT_CMDLINE_FILE")"
-    # Without the root and disk unlock parameters the rebuilt boot images would not boot
     if [[ -z "$(sed '/^#/d' <<< "$cmdline_old" | tr -d '[:space:]')" ]]; then
         die "${BOOT_CMDLINE_FILE} has no parameters, refusing to rebuild the boot images"
     fi

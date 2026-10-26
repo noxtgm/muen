@@ -4,9 +4,8 @@
 
 LOGIN_GREETER_DIR="/etc/greetd/quickshell"
 
-# Installs the greeter, the greeter user cannot read files in the user's home
 _login_install_greeter() {
-    local src="${REPO_PATH}/greeter/shell.qml" dest="${LOGIN_GREETER_DIR}/shell.qml" content
+    local src="${REPO_PATH}/widgets/greeter/shell.qml" dest="${LOGIN_GREETER_DIR}/shell.qml" content
     content="$(cat "$src")"
 
     if printf '%s\n' "$content" | sudo cmp -s - "$dest"; then

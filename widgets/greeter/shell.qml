@@ -1,6 +1,3 @@
-// Bare bones greetd greeter, shown after a logout or a Hyprland crash
-// Runs as the greeter user inside cage, see lib/login.sh
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -16,7 +13,6 @@ ShellRoot {
         property string password: ""
         property string status: ""
 
-        // cage has no scale setting so text is sized from the screen height
         property int fontSize: Math.max(16, Math.round(height / 45))
 
         function login() {
