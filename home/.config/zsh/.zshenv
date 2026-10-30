@@ -1,7 +1,0 @@
-export EDITOR="nvim"
-export VISUAL="nvim"
-export TERMINAL="ghostty"
-export PNPM_HOME="$HOME/.local/share/pnpm"
-
-typeset -U path
-path=($path "$PNPM_HOME/bin" "$HOME/.local/bin")

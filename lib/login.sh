@@ -31,7 +31,7 @@ command = "cage -s -- env MUEN_USER=${user} qs -p ${LOGIN_GREETER_DIR}/shell.qml
 user = "greeter"
 
 [initial_session]
-command = "zsh -c 'exec systemd-cat --identifier=hyprland start-hyprland -- --locked-cmd hyprlock'"
+command = "systemd-cat --identifier=hyprland start-hyprland -- --locked-cmd hyprlock"
 user = "${user}"
 EOF
 )"

@@ -21,7 +21,7 @@ zstyle ':completion:*' menu select
 
 # Vi mode
 bindkey -v
-KEYTIMEOUT=1
+KEYTIMEOUT=5
 bindkey -v '^?' backward-delete-char
 bindkey -v '^H' backward-delete-char
 bindkey -v '^W' backward-kill-word
