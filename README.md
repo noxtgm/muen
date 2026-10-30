@@ -14,11 +14,11 @@ curl -fsSL https://raw.githubusercontent.com/noxtgm/muen/main/install.sh | bash
 muen update
 ```
 
+The boot menu can be accessed by holding space when powering on.
+
 Pulls the latest changes, installs packages, and copies the configs from `home/` into `~`.
 
 Configs edited locally that an update would overwrite are skipped and listed. Remove them and re-run, or overwrite them with `muen update --force`. The local copies are backed up to `~/.local/state/muen/backups/`.
-
-The boot menu can be accessed by holding space when powering on.
 
 ## Layout
 
