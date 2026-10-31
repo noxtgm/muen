@@ -1,5 +1,3 @@
-#!/bin/bash
-
 _log_to_file() {
     { printf '[%(%Y-%m-%d %H:%M:%S)T] [%s] %s\n' -1 "$1" "$2" >> "${REPO_LOG:-/dev/null}"; } 2>/dev/null || true
 }
@@ -26,10 +24,8 @@ log_error() {
 
 log_failure() {
     local status="$1" command="$2" source="$3" line="$4"
-    if (( BASHPID == $$ )); then
-        source="$(readlink -f -- "$source" || printf '%s' "$source")"
-        log_error "Command failed with exit code ${status} at ${source#"${REPO_PATH}/"}:${line}: ${command}"
-    fi
+    source="$(readlink -f -- "$source" || printf '%s' "$source")"
+    log_error "Command failed with exit code ${status} at ${source#"${REPO_PATH}/"}:${line}: ${command}"
 }
 
 die() {

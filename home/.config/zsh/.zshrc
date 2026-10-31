@@ -1,5 +1,4 @@
 source "$ZDOTDIR/settings.zsh"
-source "$ZDOTDIR/prompt.zsh"
 
 for file in "$ZDOTDIR"/aliases/*.zsh(N); do
     source "$file"

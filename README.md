@@ -25,7 +25,7 @@ Configs edited locally that an update would overwrite are skipped and listed. Re
 | Path | Contents |
 |---|---|
 | `install.sh` | Entry point |
-| `pacman.pkgs` | Official packages list |
+| `packages` | Official packages list |
 | `bin/` | CLI command |
 | `lib/` | Sourced helpers |
 | `home/` | Configs copied over |

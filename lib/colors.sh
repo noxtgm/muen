@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if [[ -t 1 && -t 2 && -z "${NO_COLOR:-}" ]]; then
     OFF=$'\e[0m'
     BOLD=$'\e[1m'

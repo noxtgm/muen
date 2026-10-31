@@ -26,15 +26,3 @@ bindkey -v '^?' backward-delete-char
 bindkey -v '^H' backward-delete-char
 bindkey -v '^W' backward-kill-word
 bindkey -v '^U' backward-kill-line
-
-# Beam cursor while typing and block cursor in normal mode
-_vi_cursor_shape() {
-    if [[ "$KEYMAP" == vicmd ]]; then
-        printf '\e[2 q'
-    else
-        printf '\e[6 q'
-    fi
-}
-autoload -Uz add-zle-hook-widget
-add-zle-hook-widget keymap-select _vi_cursor_shape
-add-zle-hook-widget line-init _vi_cursor_shape

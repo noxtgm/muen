@@ -18,10 +18,10 @@ reboot_countdown() {
 }
 
 main() {
-    local first_install=0
+    local is_first_install=0
 
     if (( EUID == 0 )); then
-        printf 'Run the installer as your user, not as root\n' >&2
+        printf 'Run the installer as your regular user, not as root\n' >&2
         exit 1
     fi
 
@@ -29,14 +29,14 @@ main() {
 
     if [[ ! -d "${REPO_PATH}/.git" ]]; then
         git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_PATH"
-        first_install=1
+        is_first_install=1
     fi
 
     mkdir -p "$HOME/.local/bin"
     ln -sf "${REPO_PATH}/bin/muen" "$HOME/.local/bin/muen"
     "${REPO_PATH}/bin/muen" update "$@"
 
-    if (( first_install )); then
+    if (( is_first_install )); then
         reboot_countdown
     fi
 }

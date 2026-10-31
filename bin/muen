@@ -1,5 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
+shopt -s inherit_errexit
 
 REPO_NAME="${REPO_NAME:-muen}"
 REPO_PATH="$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")"
