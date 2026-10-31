@@ -12,7 +12,7 @@ shell_set_default() {
         die "$zsh_path is not installed or not listed in /etc/shells"
     fi
 
-    chsh -s "$zsh_path"
+    sudo chsh -s "$zsh_path" "$username"
 
     log_info "Default shell set to zsh, log in again to use it"
 }
