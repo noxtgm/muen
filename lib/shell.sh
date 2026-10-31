@@ -1,18 +1,18 @@
-#!/bin/bash
-
 shell_set_default() {
-    local user zsh_path="/usr/bin/zsh"
     log_step "Setting default shell"
-    user="$(id -un)"
-    if [[ "$(getent passwd "$user" | cut -d: -f7)" == "$zsh_path" ]]; then
+
+    local username zsh_path="/usr/bin/zsh"
+    username="$(id -un)"
+    if [[ "$(getent passwd "$username" | cut -d: -f7)" == "$zsh_path" ]]; then
         log_info "zsh is already the default shell"
         return 0
     fi
 
-    if [[ ! -x "$zsh_path" ]] || ! grep -qxF "$zsh_path" /etc/shells; then
+    if [[ ! -x "$zsh_path" ]] || ! grep -qxF "$zsh_path" <(chsh -l); then
         die "$zsh_path is not installed or not listed in /etc/shells"
     fi
 
-    sudo chsh -s "$zsh_path" "$user"
+    chsh -s "$zsh_path"
+
     log_info "Default shell set to zsh, log in again to use it"
 }

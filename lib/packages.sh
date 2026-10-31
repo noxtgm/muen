@@ -11,14 +11,16 @@ _read_packages() {
 }
 
 packages_install() {
-    local -a pkgs
-    log_step "Installing pacman packages"
-    _read_packages "${REPO_PATH}/packages" pkgs
-    if (( ${#pkgs[@]} == 0 )); then
+    log_step "Installing pacman packages..."
+
+    local -a packages
+    _read_packages "${REPO_PATH}/packages" packages
+    if (( ${#packages[@]} == 0 )); then
         log_info "Nothing to install"
         return 0
     fi
 
-    sudo pacman -Syu --needed --noconfirm -- "${pkgs[@]}"
-    log_info "${#pkgs[@]} package(s) up to date"
+    sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+
+    log_info "${#packages[@]} package(s) up to date"
 }
