@@ -5,5 +5,5 @@ for file in "$ZDOTDIR"/aliases/*.zsh(N); do
 done
 unset file
 
-# zsh-syntax-highlighting must come after every other widget
+# Must stay last zsh-syntax-highlighting has to load after every widget, compinit and zle hook
 source "$ZDOTDIR/plugins.zsh"

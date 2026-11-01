@@ -1,7 +1,6 @@
-# Session environment, sourced by greetd and by zsh login shells through .zprofile
+export TERMINAL="ghostty"
 export EDITOR="nvim"
 export VISUAL="nvim"
-export TERMINAL="ghostty"
 
 case ":$PATH:" in
     *":$HOME/.local/bin:"*) ;;
