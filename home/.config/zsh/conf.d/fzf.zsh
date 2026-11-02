@@ -1,4 +1,6 @@
 if (( $+commands[fzf] )); then
+    source <(fzf --zsh)
+
     ff() {
         local file
         file=$(fzf --preview="cat {}")
@@ -9,7 +11,7 @@ if (( $+commands[fzf] )); then
 
     fgr() {
         local selection
-        selection=$(rg --color=always --line-number --no-heading . | fzf --ansi --delimiter=: --preview="cat -n {1}" --preview-window=+{2}-/2)
+        selection=$(rg --color=always --line-number --no-heading . | fzf --ansi --delimiter=: --preview="cat -n {1}" --preview-window=+{2}/2)
         if [[ -n "$selection" ]]; then
             local file="${selection%%:*}"
             local line="${selection#*:}"
