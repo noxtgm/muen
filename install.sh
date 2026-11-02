@@ -5,7 +5,7 @@ REPO_NAME="${REPO_NAME:-muen}"
 REPO_AUTHOR="${REPO_AUTHOR:-noxtgm}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 REPO_URL="https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git"
-REPO_PATH="${REPO_PATH:-${HOME}/.local/share/${REPO_NAME}}"
+REPO_PATH="${REPO_PATH:-${XDG_DATA_HOME:-${HOME}/.local/share}/${REPO_NAME}}"
 
 reboot_countdown() {
     local i
@@ -18,8 +18,6 @@ reboot_countdown() {
 }
 
 main() {
-    local is_first_install=0
-
     if (( EUID == 0 )); then
         printf 'Run the installer as your regular user, not as root\n' >&2
         exit 1
@@ -29,16 +27,13 @@ main() {
 
     if [[ ! -d "${REPO_PATH}/.git" ]]; then
         git clone --branch "$REPO_BRANCH" "$REPO_URL" "$REPO_PATH"
-        is_first_install=1
     fi
 
     mkdir -p "${HOME}/.local/bin"
     ln -sf "${REPO_PATH}/bin/muen" "${HOME}/.local/bin/muen"
     "${REPO_PATH}/bin/muen" update "$@"
 
-    if (( is_first_install )); then
-        reboot_countdown
-    fi
+    reboot_countdown
 }
 
 main "$@"
