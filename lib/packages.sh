@@ -11,12 +11,12 @@ _read_packages() {
 }
 
 packages_install() {
-    log_step "Installing pacman packages..."
+    log_step 'Installing pacman packages...'
 
     local -a packages
     _read_packages "${REPO_PATH}/packages" packages
     if (( ${#packages[@]} == 0 )); then
-        log_info "Nothing to install"
+        log_info 'Nothing to install'
         return 0
     fi
 

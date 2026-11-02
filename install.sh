@@ -5,7 +5,7 @@ REPO_NAME="${REPO_NAME:-muen}"
 REPO_AUTHOR="${REPO_AUTHOR:-noxtgm}"
 REPO_BRANCH="${REPO_BRANCH:-main}"
 REPO_URL="https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git"
-REPO_PATH="${REPO_PATH:-$HOME/.local/share/${REPO_NAME}}"
+REPO_PATH="${REPO_PATH:-${HOME}/.local/share/${REPO_NAME}}"
 
 reboot_countdown() {
     local i
@@ -32,8 +32,8 @@ main() {
         is_first_install=1
     fi
 
-    mkdir -p "$HOME/.local/bin"
-    ln -sf "${REPO_PATH}/bin/muen" "$HOME/.local/bin/muen"
+    mkdir -p "${HOME}/.local/bin"
+    ln -sf "${REPO_PATH}/bin/muen" "${HOME}/.local/bin/muen"
     "${REPO_PATH}/bin/muen" update "$@"
 
     if (( is_first_install )); then
