@@ -1,6 +1,2 @@
-for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
-    if [[ -f "/usr/share/zsh/plugins/${plugin}/${plugin}.zsh" ]]; then
-        source "/usr/share/zsh/plugins/${plugin}/${plugin}.zsh"
-    fi
-done
-unset plugin
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
