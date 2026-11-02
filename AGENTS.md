@@ -1,6 +1,6 @@
 # Context
 
-This project contains dotfiles and deployment scripts specifically configured and tuned to be deployed on the latest version of Arch Linux freshly installed using `archinstall`. It is to be used with a single SSD drive machine.
+This project contains dotfiles and deployment scripts specifically configured and tuned to be deployed on the latest version of Arch Linux freshly installed using `archinstall`. It targets one machine with a single SSD.
 
 # Scope
 
@@ -20,7 +20,7 @@ This project contains dotfiles and deployment scripts specifically configured an
 
 # Documentation access
 
-- wiki.archlinux.org answers automated fetches with a bot check. Never try to get around it (no user-agent spoofing or similar). Read Arch Wiki pages from the `arch-wiki-docs` package in a container instead (it is a snapshot: compare its date with the live page when recency matters), or ask the user to save the live page.
+- wiki.archlinux.org answers automated fetches with a bot check. Never fetch it automatically, with any client (WebFetch, curl or other), even one the check happens to let through. Read Arch Wiki pages from the `arch-wiki-docs` package in a container instead (it is a snapshot: compare its date with the live page when recency matters), or ask the user to save the live page.
 - For man pages and package docs, install the package plus `man-db` in a container; READMEs often ship in `/usr/share/doc/<pkg>/`.
 - Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly. Docs sites get reorganised, so find the current URL rather than guessing.
 
@@ -30,6 +30,7 @@ This project contains dotfiles and deployment scripts specifically configured an
 - The image's `/etc/pacman.conf` has `NoExtract` lines that drop docs and man pages: remove them (`sed -i '/NoExtract/d' /etc/pacman.conf`) before installing packages whose docs are needed.
 - The image lacks `diff`, `cmp` and `python3`: install `diffutils` or `python` when needed.
 - Test interactive behaviour (key bindings, completion, widgets) in a real terminal.
+- Containers share the Docker VM's kernel. Never boot systemd in a privileged container, apply kernel settings (sysctl) or load kernel modules: the change hits the shared kernel, not just the container. If it happens anyway, tell the user; restarting the Docker VM (`wsl --shutdown` on this Windows host) resets it.
 - Remove any containers and images created for testing when done.
 
 # Configuration
@@ -63,8 +64,9 @@ Each H2 below is a menu of the official `archinstall` installer, checked against
 ### Disk encryption
 
 - `LUKS` encryption type
-- Root partition selected
+- Encryption password set
 - Default iteration time
+- Root partition selected
 - Default HSM (none)
 
 ## Swap
@@ -148,7 +150,7 @@ Each H2 below is a menu of the official `archinstall` installer, checked against
 
 ## Timezone
 
-- Selected
+- Local timezone selected (not the UTC default)
 
 ## Automatic time sync (NTP)
 
