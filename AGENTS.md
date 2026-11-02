@@ -29,8 +29,7 @@ This project contains dotfiles and deployment scripts specifically configured an
 - Verify behaviour by testing in a Docker `archlinux:latest` container, not by reasoning alone.
 - The image's `/etc/pacman.conf` has `NoExtract` lines that drop docs and man pages: remove them (`sed -i '/NoExtract/d' /etc/pacman.conf`) before installing packages whose docs are needed.
 - The image lacks `diff`, `cmp` and `python3`: install `diffutils` or `python` when needed.
-- Test interactive behaviour (key bindings, completion, widgets) in a real terminal, e.g. a sized tmux session (`tmux new-session -d -x 120 -y 30`, then `send-keys` and `capture-pane`) or zsh's `zpty`. With `script`, set the size first (`stty rows 30 cols 100`): its terminal starts at 0×0, and tools such as eza then behave as if there is no terminal.
-- Test systemd units with systemd as PID 1: run the container with `--privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw` and `/usr/lib/systemd/systemd` as the command. For the user manager, also run `loginctl enable-linger <user>`.
+- Test interactive behaviour (key bindings, completion, widgets) in a real terminal.
 - Remove any containers and images created for testing when done.
 
 # Configuration
@@ -125,7 +124,7 @@ Each H2 below is a menu of the official `archinstall` installer, checked against
 
 ### Power management
 
-- `tuned` power management
+- `power-profiles-daemon` power management
 
 ### Firewall
 
