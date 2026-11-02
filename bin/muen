@@ -8,6 +8,8 @@ REPO_LIB="${REPO_PATH}/lib"
 REPO_LOG="${XDG_STATE_HOME:-${HOME}/.local/state}/${REPO_NAME}/${REPO_NAME}.log"
 FORCE=0
 
+export GIT_TERMINAL_PROMPT=0
+
 source "${REPO_LIB}/init.sh"
 
 trap 'log_failure "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
