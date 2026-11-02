@@ -1,0 +1,117 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+REPO_NAME="${REPO_NAME:-muen}"
+REPO_PATH="$(readlink -f -- "${BASH_SOURCE[0]}")"
+REPO_PATH="${REPO_PATH%/bin/*}"
+REPO_LIB="${REPO_PATH}/lib"
+REPO_LOG="${XDG_STATE_HOME:-${HOME}/.local/state}/${REPO_NAME}/${REPO_NAME}.log"
+FORCE=0
+
+source "${REPO_LIB}/init.sh"
+
+trap 'log_failure "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
+
+usage() {
+    printf '%s\n' \
+        'Usage: muen update [--force]' \
+        '       muen --help' \
+        '       muen --version' \
+        '' \
+        'Update this machine from the repository.' \
+        '' \
+        'Commands:' \
+        '  update       pull the latest changes, apply them to this machine and reboot' \
+        '' \
+        'Options:' \
+        "  --force      overwrite local changes with the repository's version" \
+        '  -h, --help   show this help and exit' \
+        '  --version    show the version and exit'
+}
+
+print_version() {
+    printf 'muen %s\n' "$(git -C "$REPO_PATH" describe --always --dirty)"
+    printf 'Committed on %s\n' "$(git -C "$REPO_PATH" log -1 --format=%cs)"
+}
+
+update_repo() {
+    local git=(git -C "$REPO_PATH")
+    local changes ahead before
+
+    log_step "Updating the muen repository"
+
+    "${git[@]}" remote set-url --push origin 'no-push://muen'
+    "${git[@]}" fetch --quiet origin
+
+    changes="$("${git[@]}" status --porcelain --untracked-files=no)"
+    ahead="$("${git[@]}" rev-list --count '@{u}..HEAD')"
+    before="$("${git[@]}" rev-parse HEAD)"
+
+    if [[ -n "$changes" ]] || (( ahead > 0 )); then
+        if (( ! FORCE )); then
+            log_warn "Local changes in ${REPO_PATH}, skipping the repository update (use --force to discard them)"
+            return
+        fi
+        log_warn "Discarding local changes in ${REPO_PATH}"
+        "${git[@]}" reset --hard --quiet '@{u}'
+    else
+        "${git[@]}" merge --ff-only --quiet '@{u}'
+        if [[ "$("${git[@]}" rev-parse HEAD)" == "$before" ]]; then
+            log_info "Already up to date"
+            return
+        fi
+    fi
+
+    log_info "Restarting with the updated muen"
+    export MUEN_REPO_UPDATED=1
+    exec "${REPO_PATH}/bin/muen" "${ARGS[@]}"
+}
+
+reboot_countdown() {
+    local i
+    for (( i = 10; i > 0; i-- )); do
+        printf '\rRebooting in %2d seconds... press Ctrl-C to cancel' "$i"
+        sleep 1
+    done
+    printf '\n'
+    sudo systemctl reboot
+}
+
+update() {
+    if [[ -z "${MUEN_REPO_UPDATED:-}" ]]; then
+        update_repo
+    fi
+    packages_install
+    reboot_countdown
+}
+
+main() {
+    local arg command=''
+
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help) usage; return ;;
+            --version) print_version; return ;;
+        esac
+    done
+
+    for arg in "$@"; do
+        case "$arg" in
+            --force) FORCE=1 ;;
+            update) command="$arg" ;;
+            *) die "Unknown argument: ${arg} (see 'muen --help')" ;;
+        esac
+    done
+
+    [[ -n "$command" ]] || die "Missing command (see 'muen --help')"
+
+    if (( EUID == 0 )); then
+        die 'Run muen as your regular user, not as root'
+    fi
+
+    mkdir -p -- "${REPO_LOG%/*}"
+    ARGS=("$@")
+    "$command"
+}
+
+main "$@"

@@ -1,26 +1,18 @@
-_read_packages() {
-    local file="$1"
-    local -n _read_packages_out="$2"
+packages_install() {
+    local list="${REPO_PATH}/packages"
 
-    if [[ ! -f "$file" ]]; then
-        die "${file} not found"
+    log_step 'Installing pacman packages'
+
+    if [[ ! -f "$list" ]]; then
+        die "${list} not found"
     fi
 
-    mapfile -t _read_packages_out < <(awk '{ for (i = 1; i <= NF; i++) print $i }' "$file")
-    wait "$!" || die "failed to read ${file}"
-}
-
-packages_install() {
-    log_step 'Installing pacman packages...'
-
-    local -a packages
-    _read_packages "${REPO_PATH}/packages" packages
-    if (( ${#packages[@]} == 0 )); then
+    if ! grep -q '[^[:space:]]' "$list"; then
         log_info 'Nothing to install'
         return 0
     fi
 
-    sudo pacman -Syu --needed --noconfirm -- "${packages[@]}"
+    sudo pacman -Syu --needed --noconfirm - < "$list"
 
-    log_info "${#packages[@]} package(s) up to date"
+    log_info 'Packages up to date'
 }

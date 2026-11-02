@@ -1,43 +1,14 @@
-cage
-greetd
-qt6-wayland
-quickshell
-xdg-desktop-portal-hyprland
-xdg-terminal-exec
-
-hyprland
-hyprlauncher
-hyprlock
-hypridle
-hyprpolkitagent
-
-brightnessctl
-playerctl
-fprintd
-
-zsh
-zsh-autosuggestions
-zsh-syntax-highlighting
-
-eza
-fzf
 ripgrep
-zoxide
 
 7zip
 btop
-docker
 nodejs
 python
 
-ghostty
-
 librewolf
-tor
+torbrowser-launcher
 
 neovim
 zed
 
 obsidian
-
-ttf-jetbrains-mono-nerd

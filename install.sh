@@ -7,16 +7,6 @@ REPO_BRANCH="${REPO_BRANCH:-main}"
 REPO_URL="https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git"
 REPO_PATH="${REPO_PATH:-${XDG_DATA_HOME:-${HOME}/.local/share}/${REPO_NAME}}"
 
-reboot_countdown() {
-    local i
-    for (( i = 10; i > 0; i-- )); do
-        printf '\rRebooting in %2d seconds... press Ctrl-C to cancel' "$i"
-        sleep 1
-    done
-    printf '\n'
-    sudo systemctl reboot
-}
-
 main() {
     if (( EUID == 0 )); then
         printf 'Run the installer as your regular user, not as root\n' >&2
@@ -32,8 +22,6 @@ main() {
     mkdir -p "${HOME}/.local/bin"
     ln -sf "${REPO_PATH}/bin/muen" "${HOME}/.local/bin/muen"
     "${REPO_PATH}/bin/muen" update "$@"
-
-    reboot_countdown
 }
 
 main "$@"
