@@ -1,7 +1,7 @@
 shell_set_default() {
-    log_step 'Setting default shell'
-
     local zsh_path='/usr/bin/zsh'
+
+    log_step 'Setting default shell'
 
     if [[ "$(getent passwd "$(id -un)" | cut -d: -f7)" == "$zsh_path" ]]; then
         log_info 'zsh is already the default shell'

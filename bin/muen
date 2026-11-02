@@ -82,6 +82,7 @@ update() {
         update_repo
     fi
     packages_install
+    boot_configure
     reboot_countdown
 }
 
