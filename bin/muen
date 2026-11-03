@@ -17,7 +17,7 @@ usage() {
 Usage: muen <command> [options]
 
 Commands:
-  update        Update files and apply them to this machine
+  update        Update files, apply them to this machine and reboot
   help          Show this help
 
 Options:
@@ -35,10 +35,10 @@ usage_error() {
 
 update() {
     if (( EUID == 0 )); then
-        die "Run muen update as your regular user, not as root"
+        die 'Run muen update as your regular user, not as root'
     fi
 
-    log_step "Updating muen"
+    log_step 'Updating muen'
 
     git -C "$REPO_PATH" fetch --quiet
     git -C "$REPO_PATH" reset --hard --quiet '@{upstream}'
@@ -73,10 +73,10 @@ main() {
     case "$command" in
         update) update ;;
         help)
-            (( FORCE == 0 )) || usage_error "--force only works with update"
+            (( FORCE == 0 )) || usage_error '--force only works with update'
             usage
             ;;
-        '') usage_error "No command given" ;;
+        '') usage_error 'No command given' ;;
         *) usage_error "Unknown command '${command}'" ;;
     esac
 }

@@ -1,40 +1,84 @@
+_boot_file_current() {
+    sudo cmp -s -- "${REPO_PATH}/system/$1" "/$1"
+}
+
+_boot_file_install() {
+    sudo install -Dm 644 -- "${REPO_PATH}/system/$1" "/$1"
+}
+
 _boot_configure_cmdline() {
-    local cmdline=/etc/cmdline.d/quiet.conf
-    local source="${REPO_PATH}/system${cmdline}"
+    local file='etc/cmdline.d/quiet.conf' previous=''
 
     log_step 'Configuring the kernel command line'
 
-    if [[ -f "$cmdline" && "$(< "$cmdline")" == "$(< "$source")" ]]; then
+    if _boot_file_current "$file"; then
         log_info 'Kernel command line up to date'
         return
     fi
 
-    sudo install -Dm 644 -- "$source" "$cmdline"
+    if [[ -f "/${file}" ]]; then
+        previous="$(mktemp)"
+        cp -- "/${file}" "$previous"
+    fi
+
+    _boot_file_install "$file"
 
     if ! sudo mkinitcpio -P; then
-        sudo rm -f -- "$cmdline"
+        if [[ -n "$previous" ]]; then
+            sudo install -m 644 -- "$previous" "/${file}"
+            rm -f -- "$previous"
+        else
+            sudo rm -f -- "/${file}"
+        fi
         die 'Rebuilding the boot images failed, kernel command line not changed'
+    fi
+
+    if [[ -n "$previous" ]]; then
+        rm -f -- "$previous"
     fi
 
     log_info 'Kernel command line updated'
 }
 
 _boot_configure_loader() {
+    local file='boot/loader/loader.conf'
+
     log_step 'Configuring the boot loader'
 
-    sudo install -m 644 -- "${REPO_PATH}/system/boot/loader/loader.conf" /boot/loader/loader.conf
-    sudo systemctl enable --quiet systemd-boot-update.service
+    if _boot_file_current "$file"; then
+        log_info 'Boot loader configuration up to date'
+    else
+        _boot_file_install "$file"
+        log_info 'Boot loader configuration updated'
+    fi
 
-    log_info 'Boot loader configured'
+    if systemctl is-enabled --quiet systemd-boot-update.service; then
+        log_info 'Automatic boot loader updates already enabled'
+    else
+        sudo systemctl enable --quiet systemd-boot-update.service
+        log_info 'Automatic boot loader updates enabled'
+    fi
 }
 
 _boot_configure_zram() {
+    local sysctl='etc/sysctl.d/90-vm-zram-parameters.conf'
+    local size='etc/systemd/zram-generator.conf.d/60-size.conf'
+
     log_step 'Tuning swap on zram'
 
-    sudo install -Dm 644 -- "${REPO_PATH}/system/etc/sysctl.d/90-vm-zram-parameters.conf" /etc/sysctl.d/90-vm-zram-parameters.conf
-    sudo install -Dm 644 -- "${REPO_PATH}/system/etc/systemd/zram-generator.conf.d/50-size.conf" /etc/systemd/zram-generator.conf.d/50-size.conf
+    if _boot_file_current "$sysctl"; then
+        log_info 'Memory settings up to date'
+    else
+        _boot_file_install "$sysctl"
+        log_info 'Memory settings updated'
+    fi
 
-    log_info 'Swap on zram tuned'
+    if _boot_file_current "$size"; then
+        log_info 'Swap size up to date'
+    else
+        _boot_file_install "$size"
+        log_info 'Swap size updated'
+    fi
 }
 
 boot_configure() {
