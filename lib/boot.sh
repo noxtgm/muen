@@ -14,7 +14,7 @@ _boot_configure_zram() {
 
     log_step 'Tuning swap on zram'
 
-    sudo install -Dm 644 -- "${system}/etc/sysctl.d/99-vm-zram-parameters.conf" /etc/sysctl.d/99-vm-zram-parameters.conf
+    sudo install -Dm 644 -- "${system}/etc/sysctl.d/90-vm-zram-parameters.conf" /etc/sysctl.d/90-vm-zram-parameters.conf
     sudo install -Dm 644 -- "${system}/etc/systemd/zram-generator.conf.d/50-size.conf" /etc/systemd/zram-generator.conf.d/50-size.conf
 
     log_info 'Swap on zram tuned'
@@ -41,18 +41,8 @@ _boot_configure_cmdline() {
     log_info 'Kernel command line updated'
 }
 
-_boot_configure_console() {
-    log_step 'Restoring the cursor on text consoles'
-
-    sudo mkdir -p /etc/issue.d
-    TERM=linux setterm -cursor on | sudo tee /etc/issue.d/cursor.issue > /dev/null
-
-    log_info 'Text console cursor restored'
-}
-
 boot_configure() {
     _boot_configure_loader
     _boot_configure_zram
     _boot_configure_cmdline
-    _boot_configure_console
 }

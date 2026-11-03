@@ -18,7 +18,6 @@ usage() {
     printf '%s\n' \
         'Usage: muen update [--force]' \
         '       muen --help' \
-        '       muen --version' \
         '' \
         'Update this machine from the repository.' \
         '' \
@@ -27,20 +26,14 @@ usage() {
         '' \
         'Options:' \
         "  --force      overwrite local changes with the repository's version" \
-        '  -h, --help   show this help and exit' \
-        '  --version    show the version and exit'
-}
-
-print_version() {
-    printf 'muen %s\n' "$(git -C "$REPO_PATH" describe --always --dirty)"
-    printf 'Committed on %s\n' "$(git -C "$REPO_PATH" log -1 --format=%cs)"
+        '  -h, --help   show this help and exit'
 }
 
 update_repo() {
     local git=(git -C "$REPO_PATH")
     local changes ahead before
 
-    log_step "Updating the muen repository"
+    log_step 'Updating the muen repository'
 
     "${git[@]}" remote set-url --push origin 'no-push://muen'
     "${git[@]}" fetch --quiet origin
@@ -94,7 +87,6 @@ main() {
     for arg in "$@"; do
         case "$arg" in
             -h|--help) usage; return ;;
-            --version) print_version; return ;;
         esac
     done
 

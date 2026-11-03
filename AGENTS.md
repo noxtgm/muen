@@ -10,23 +10,23 @@ This project contains dotfiles and deployment scripts specifically configured an
 # Security considerations
 
 - Security comes before convenience. When a choice trades one for the other (autologin, skipping a password, looser permissions, fewer prompts), default to the secure option and present the convenient one only with its security cost spelled out.
-- Before implementing anything that changes how the user authenticates or what can capture input or the screen, audit it (verify claims in source and docs, test failure modes) and get explicit approval. Prefer designs whose failure modes end at a password prompt, never at an open shell or an unlocked session.
+- Before implementing anything that changes how the user authenticates or what can capture input or the screen, audit it (verify claims in source AND docs, test failure modes) and get explicit approval. Prefer designs whose failure modes end at a password prompt, NEVER at an open shell or an unlocked session.
 
 # Design choices
 
-- Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows. Check which version is the latest with web tools first; never assume it or outright trust deprecated findings.
+- Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows. Check which version is the latest with web tools first; NEVER assume it or outright trust deprecated findings.
 - Any choice that departs from the officially recommended setup must be presented first, saying how and why it departs, and applied only after approval.
 - Check against how tools behave in their current versions. Don't flag or guard against possible future upstream changes.
 
 # Documentation access
 
-- wiki.archlinux.org answers automated fetches with a bot check. Never fetch it automatically, with any client (WebFetch, curl or other), even one the check happens to let through. Read Arch Wiki pages from the `arch-wiki-docs` package in a container instead (it is a snapshot: compare its date with the live page when recency matters), or ask the user to save the live page.
+- wiki.archlinux.org answers automated fetches with a bot check. Read Arch Wiki pages from the `arch-wiki-docs` package in a container instead (it is a snapshot: compare its date with the live page when recency matters), or ask the user to save the live page.
 - For man pages and package docs, install the package plus `man-db` in a container; READMEs often ship in `/usr/share/doc/<pkg>/`.
 - Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly. Docs sites get reorganised, so find the current URL rather than guessing.
 
 # Testing instructions
 
-- Verify behaviour by testing in a Docker `archlinux:latest` container, not by reasoning alone.
+- Verify behaviour by testing in a Docker `archlinux:latest` container, NOT by reasoning alone.
 - The image's `/etc/pacman.conf` has `NoExtract` lines that drop docs and man pages: remove them (`sed -i '/NoExtract/d' /etc/pacman.conf`) before installing packages whose docs are needed.
 - The image lacks `diff`, `cmp` and `python3`: install `diffutils` or `python` when needed.
 - Test interactive behaviour (key bindings, completion, widgets) in a real terminal.
