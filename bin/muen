@@ -1,22 +1,84 @@
 #!/bin/bash
 set -Eeuo pipefail
+shopt -s inherit_errexit
 
-source "${REPO_LIB}/init.sh"
+REPO_PATH="$(realpath -- "${BASH_SOURCE[0]}")"
+REPO_PATH="${REPO_PATH%/bin/muen}"
+REPO_LIB="${REPO_PATH}/lib"
+FORCE=0
 
-_reboot_countdown() {
-    local i
-    for (( i = 10; i > 0; i-- )); do
-        printf '\rRebooting in %2d seconds...' "$i"
-        sleep 1
-    done
-    printf '\n'
-    sudo systemctl reboot
+source "${REPO_LIB}/colors.sh"
+source "${REPO_LIB}/logging.sh"
+
+trap 'log_failure "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
+
+usage() {
+    cat <<'USAGE'
+Usage: muen <command> [options]
+
+Commands:
+  update        Update files and apply them to this machine
+  help          Show this help
+
+Options:
+  -f, --force   With update, overwrite deployed files that were changed
+  -h, --help    Show this help
+  --version     Show the version
+
+Home page: <https://muen.fr>
+USAGE
+}
+
+usage_error() {
+    die "${1}. See 'muen help'"
 }
 
 update() {
-    packages_install
-    shell_set_default
-    boot_configure
+    if (( EUID == 0 )); then
+        die "Run muen update as your regular user, not as root"
+    fi
 
-    _reboot_countdown
+    log_step "Updating muen"
+
+    git -C "$REPO_PATH" fetch --quiet
+    git -C "$REPO_PATH" reset --hard --quiet '@{upstream}'
+
+    log_info "Now at $(git -C "$REPO_PATH" log -1 --format='%h %s')"
+
+    source "${REPO_LIB}/init.sh"
+    update_steps
 }
+
+main() {
+    local arg command=''
+
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help) usage; exit 0 ;;
+            --version) printf 'muen 1.0\n'; exit 0 ;;
+        esac
+    done
+
+    for arg in "$@"; do
+        case "$arg" in
+            -f|--force) FORCE=1 ;;
+            -*) usage_error "Unknown option '${arg}'" ;;
+            *)
+                [[ -z "$command" ]] || usage_error "Unexpected argument '${arg}'"
+                command="$arg"
+                ;;
+        esac
+    done
+
+    case "$command" in
+        update) update ;;
+        help)
+            (( FORCE == 0 )) || usage_error "--force only works with update"
+            usage
+            ;;
+        '') usage_error "No command given" ;;
+        *) usage_error "Unknown command '${command}'" ;;
+    esac
+}
+
+main "$@"
