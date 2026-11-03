@@ -1,3 +1,24 @@
+_boot_configure_cmdline() {
+    local cmdline=/etc/cmdline.d/quiet.conf
+    local source="${REPO_PATH}/system${cmdline}"
+
+    log_step 'Configuring the kernel command line'
+
+    if [[ -f "$cmdline" && "$(< "$cmdline")" == "$(< "$source")" ]]; then
+        log_info 'Kernel command line up to date'
+        return
+    fi
+
+    sudo install -Dm 644 -- "$source" "$cmdline"
+
+    if ! sudo mkinitcpio -P; then
+        sudo rm -f -- "$cmdline"
+        die 'Rebuilding the boot images failed, kernel command line not changed'
+    fi
+
+    log_info 'Kernel command line updated'
+}
+
 _boot_configure_loader() {
     local system="${REPO_PATH}/system"
 
@@ -20,29 +41,8 @@ _boot_configure_zram() {
     log_info 'Swap on zram tuned'
 }
 
-_boot_configure_cmdline() {
-    local cmdline=/etc/cmdline.d/quiet.conf
-    local source="${REPO_PATH}/system${cmdline}"
-
-    log_step 'Configuring the kernel command line'
-
-    if [[ -f "$cmdline" && "$(< "$cmdline")" == "$(< "$source")" ]]; then
-        log_info 'Kernel command line up to date'
-        return
-    fi
-
-    sudo install -Dm 644 -- "$source" "$cmdline"
-
-    if ! sudo mkinitcpio -P; then
-        sudo rm -f -- "$cmdline"
-        die 'Rebuilding the boot images failed, kernel command line not changed'
-    fi
-
-    log_info 'Kernel command line updated'
-}
-
 boot_configure() {
+    _boot_configure_cmdline
     _boot_configure_loader
     _boot_configure_zram
-    _boot_configure_cmdline
 }

@@ -1,0 +1,22 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+source "${REPO_LIB}/init.sh"
+
+_reboot_countdown() {
+    local i
+    for (( i = 10; i > 0; i-- )); do
+        printf '\rRebooting in %2d seconds...' "$i"
+        sleep 1
+    done
+    printf '\n'
+    sudo systemctl reboot
+}
+
+update() {
+    packages_install
+    shell_set_default
+    boot_configure
+
+    _reboot_countdown
+}
