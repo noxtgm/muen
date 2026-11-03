@@ -1,5 +1,13 @@
 zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+
+eza
+fzf
 ripgrep
+zoxide
+
+ghostty
 
 7zip
 btop
@@ -13,3 +21,5 @@ neovim
 zed
 
 obsidian
+
+ttf-jetbrains-mono-nerd

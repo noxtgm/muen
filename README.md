@@ -1,6 +1,6 @@
 # MUEN
 
-Deployment and setup logic for opinionated dotfiles on a fresh Arch Linux install.
+Deployment and setup logic of opinionated dotfiles on a fresh Arch Linux install.
 
 ## Install
 
@@ -14,17 +14,14 @@ curl -fsSL https://raw.githubusercontent.com/noxtgm/muen/main/install.sh | bash
 muen update
 ```
 
-The boot menu can be accessed by holding space when powering on.
-
-Pulls the latest changes, installs packages, and copies the configs from `home/` into `~`.
-
 ## Layout
 
 | Path | Contents |
 |---|---|
-| `install.sh` | Entry point |
+| `install.sh` | First install entry point |
 | `packages` | Official packages list |
-| `bin/` | CLI command |
-| `lib/` | Sourced helpers |
-| `home/` | Configs copied over |
-| `widgets/` | Styled widgets |
+| `bin/` | Command line interface bin command  |
+| `config/` | Configs copied over to `.config` |
+| `lib/` | Sourced shared helpers |
+| `system/` | System configs copied over |
+| `widget/` | Styled widgets |
