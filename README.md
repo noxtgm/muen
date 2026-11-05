@@ -5,7 +5,7 @@ Deployment and setup logic of opinionated dotfiles on a fresh Arch Linux install
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/noxtgm/muen/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/<author>/<repo>/<branch>/install.sh | bash
 ```
 
 ## Usage

@@ -1,3 +1,12 @@
+quickshell
+fprintd
+
+hyprland
+hyprlauncher
+hyprlock
+hypridle
+hyprpolkitagent
+
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
@@ -11,6 +20,7 @@ ghostty
 
 7zip
 btop
+docker
 nodejs
 python
 
