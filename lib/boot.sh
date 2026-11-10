@@ -13,17 +13,10 @@ _boot_configure_cmdline() {
 
     if _boot_file_current "$file"; then
         log_info 'Kernel command line up to date'
-        return
+    else
+        _boot_file_install "$file"
+        log_info 'Kernel command line updated'
     fi
-
-    _boot_file_install "$file"
-
-    if ! sudo mkinitcpio -P; then
-        sudo rm -f -- "/${file}"
-        die "Rebuilding the boot images failed, they may already include the new kernel command line. Fix the error and run 'muen update' again"
-    fi
-
-    log_info 'Kernel command line updated'
 }
 
 _boot_configure_console() {
@@ -88,4 +81,14 @@ boot_configure() {
     _boot_configure_console
     _boot_configure_loader
     _boot_configure_zram
+}
+
+boot_images_rebuild() {
+    log_step 'Rebuilding the boot images'
+
+    if ! sudo mkinitcpio -P; then
+        die "Rebuilding the boot images failed, fix the error and run 'muen update' again"
+    fi
+
+    log_info 'Boot images rebuilt'
 }
