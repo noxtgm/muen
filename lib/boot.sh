@@ -26,6 +26,22 @@ _boot_configure_cmdline() {
     log_info 'Kernel command line updated'
 }
 
+_boot_configure_console() {
+    local issue='/etc/issue.d/cursor.issue'
+    local cursor
+
+    log_step 'Restoring the cursor on text consoles'
+
+    cursor="$(setterm --term linux --cursor on)"
+
+    if cmp -s -- "$issue" <(printf '%s' "$cursor"); then
+        log_info 'Text console cursor up to date'
+    else
+        printf '%s' "$cursor" | sudo install -Dm 644 -- /dev/stdin "$issue"
+        log_info 'Text console cursor restored'
+    fi
+}
+
 _boot_configure_loader() {
     local file='boot/loader/loader.conf'
 
@@ -69,6 +85,7 @@ _boot_configure_zram() {
 
 boot_configure() {
     _boot_configure_cmdline
+    _boot_configure_console
     _boot_configure_loader
     _boot_configure_zram
 }
