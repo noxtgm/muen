@@ -7,7 +7,7 @@ _boot_file_install() {
 }
 
 _boot_configure_cmdline() {
-    local file='etc/cmdline.d/quiet.conf' previous=''
+    local file='etc/cmdline.d/quiet.conf'
 
     log_step 'Configuring the kernel command line'
 
@@ -16,25 +16,11 @@ _boot_configure_cmdline() {
         return
     fi
 
-    if [[ -f "/${file}" ]]; then
-        previous="$(mktemp)"
-        cp -- "/${file}" "$previous"
-    fi
-
     _boot_file_install "$file"
 
     if ! sudo mkinitcpio -P; then
-        if [[ -n "$previous" ]]; then
-            sudo install -m 644 -- "$previous" "/${file}"
-            rm -f -- "$previous"
-        else
-            sudo rm -f -- "/${file}"
-        fi
-        die 'Rebuilding the boot images failed, kernel command line not changed'
-    fi
-
-    if [[ -n "$previous" ]]; then
-        rm -f -- "$previous"
+        sudo rm -f -- "/${file}"
+        die "Rebuilding the boot images failed, they may already include the new kernel command line. Fix the error and run 'muen update' again"
     fi
 
     log_info 'Kernel command line updated'
