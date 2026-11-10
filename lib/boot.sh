@@ -62,7 +62,7 @@ _boot_configure_loader() {
 
 _boot_configure_zram() {
     local sysctl='etc/sysctl.d/90-vm-zram-parameters.conf'
-    local size='etc/systemd/zram-generator.conf.d/60-size.conf'
+    local size='etc/systemd/zram-generator.conf.d/60-swap-size.conf'
 
     log_step 'Tuning swap on zram'
 
