@@ -9,30 +9,29 @@ This project contains dotfiles and deployment scripts specifically configured an
 
 # Security considerations
 
-- Security comes before convenience. When a choice trades one for the other (e.g. autologin, skipping a password, looser permissions, fewer prompts), default to the secure option and present the convenient one only with its security cost spelled out.
+- Security comes before convenience. When a choice trades one for the other (e.g. autologin, skipping a password, looser permissions, fewer prompts), default to the most secure option and present the convenient option only with its detailed security cost.
 - Before implementing anything that changes how the user authenticates or what can capture input or the screen, audit it (verify claims in source AND documentation, test failure modes) and get explicit approval. Prefer designs whose failure modes end at a password prompt, NEVER at an open shell or an unlocked session.
 
 # Design choices
 
-- Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows. Check which version is the latest with web tools first; NEVER assume it or outright trust deprecated findings.
+- Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows. Check which version is the latest with web tools first; NEVER assume it or outright trust potentially deprecated findings.
 - Any choice that departs from the officially recommended setup must be presented first, saying how and why it departs, and applied only after approval.
 - Check against how tools behave in their current versions.
 
 # Documentation access
 
 - wiki.archlinux.org answers automated fetches with a bot check. Read Arch Wiki pages from the `arch-wiki-docs` package in a container instead (it is a snapshot: compare its date with the live page when recency matters), or ask the user to save the live page.
-- Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly. Docs sites get reorganised, so find the current URL rather than guessing.
+- Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly. Docs sites get reorganised so find the current URL rather than guessing it.
 
 # Testing instructions
 
 - Verify behaviour by testing in a Docker `archlinux:latest` container, NOT by reasoning alone.
 - Test interactive behaviour (key bindings, completion, widgets) in a real terminal.
-- Containers share the Docker VM's kernel. Never boot systemd in a privileged container, apply kernel settings (sysctl) or load kernel modules: the change hits the shared kernel, not just the container. If it happens anyway, tell the user; restarting the Docker VM (`wsl --shutdown` on this Windows host) resets it.
 - Remove any containers and images created for testing when done.
 
-# Machine base configuration
+# archinstall configuration
 
-Each H2 below is a menu of the official `archinstall` installer, checked against archinstall 4.5 (ISO 2026.11.01).
+Below is the detailed selected configuration of the official `archinstall` installer, each H2 being a top-level menu of the installer.
 
 ## Archinstall language
 
