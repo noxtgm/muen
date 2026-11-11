@@ -1,7 +1,7 @@
 update_steps() {
     packages_install
-    boot_configure
     configs_deploy
+    boot_configure
     shell_set_default
     boot_images_rebuild
 
