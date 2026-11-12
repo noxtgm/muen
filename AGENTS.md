@@ -17,6 +17,7 @@ This project contains dotfiles and deployment scripts specifically configured an
 - Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows; check which version is the latest with web tools first, NEVER assume it or outright trust potentially deprecated findings
 - Any choice that departs from the officially recommended setup must be presented first, saying how and why it departs, and applied only after explicit approval from the user
 - Check against how tools behave in their current versions
+- Never put symlinks in `configs/` (`configs_deploy` refuses them); share a config between paths by committing the file twice or with the application's own include mechanism
 
 # Documentation access
 
