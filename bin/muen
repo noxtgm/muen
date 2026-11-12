@@ -1,14 +1,69 @@
 #!/bin/bash
-# TODO: add the correct pipefail
+set -Eeuo pipefail
 
-# TODO: add the required paths
+REPO_PATH="$(dirname "$(dirname "$(readlink -f -- "${BASH_SOURCE[0]}")")")"
+REPO_LIB="${REPO_PATH}/lib"
+FORCE=0
+
+export GIT_TERMINAL_PROMPT=0
 
 source "${REPO_LIB}/colors.sh"
 source "${REPO_LIB}/logging.sh"
 
-# TODO: add an error trap
+trap 'log_failure "$?" "$BASH_COMMAND" "${BASH_SOURCE[0]}" "$LINENO"' ERR
+
+# Resets the clone to its upstream and restarts muen when any file changed
+_repo_update() {
+    local before after line
+    local -a changes=()
+
+    log_step 'Updating the repository'
+
+    git -C "$REPO_PATH" rev-parse --verify --quiet '@{upstream}' > /dev/null || die "The repository at ${REPO_PATH} has no upstream branch"
+    git -C "$REPO_PATH" fetch --quiet || die 'Fetching the repository failed, check the network connection'
+
+    # Local work in the clone is flagged like a config conflict (discarded with --force)
+    while IFS= read -r line; do
+        changes+=("local change: ${line:3}")
+    done < <(git -C "$REPO_PATH" status --porcelain --untracked-files=no)
+
+    while IFS= read -r line; do
+        changes+=("unpushed commit: ${line}")
+    done < <(git -C "$REPO_PATH" log --oneline '@{upstream}..HEAD')
+
+    if (( ${#changes[@]} )); then
+        for line in "${changes[@]}"; do
+            if (( FORCE )); then
+                log_info "Discarded ${line}"
+            else
+                log_warn "${line^}"
+            fi
+        done
+
+        if (( ! FORCE )); then
+            die "${#changes[@]} local changes in the repository, commit and push them then run 'muen update' again, or run 'muen update --force' to discard them"
+        fi
+    fi
+
+    before="$(git -C "$REPO_PATH" rev-parse HEAD)"
+    git -C "$REPO_PATH" reset --quiet --hard '@{upstream}'
+    after="$(git -C "$REPO_PATH" rev-parse HEAD)"
+
+    if [[ "$before" == "$after" && ${#changes[@]} -eq 0 ]]; then
+        log_info 'Repository up to date'
+        return
+    fi
+
+    log_info "Repository updated to ${after:0:7}"
+    log_info 'Restarting with the updated files'
+    REPO_UPDATED=1 exec "${REPO_PATH}/bin/muen" "$@"
+}
 
 _update() {
+    if [[ -z "${REPO_UPDATED:-}" ]]; then
+        _repo_update "$@"
+    fi
+
     source "${REPO_LIB}/init.sh"
     packages_install
     configs_deploy
@@ -18,13 +73,17 @@ _update() {
 }
 
 main() {
+    if (( EUID == 0 )); then
+        die 'Run muen as your regular user, not as root'
+    fi
+
     if [[ $# -eq 2 && "$1" == 'update' && "$2" == '--force' ]]; then
         FORCE=1
     elif [[ $# -ne 1 || "$1" != 'update' ]]; then
         die "Expected 'muen update' or 'muen update --force'"
     fi
 
-    update
+    _update "$@"
 }
 
 main "$@"
