@@ -25,11 +25,13 @@ _repo_update() {
     # Local work in the clone is flagged like a config conflict (discarded with --force)
     while IFS= read -r line; do
         changes+=("local change: ${line:3}")
-    done < <(git -C "$REPO_PATH" status --porcelain --untracked-files=no)
+    done < <(trap - ERR; git -C "$REPO_PATH" status --porcelain --untracked-files=no)
+    wait "$!" || die 'Listing the local changes failed'
 
     while IFS= read -r line; do
         changes+=("unpushed commit: ${line}")
-    done < <(git -C "$REPO_PATH" log --oneline '@{upstream}..HEAD')
+    done < <(trap - ERR; git -C "$REPO_PATH" log --oneline '@{upstream}..HEAD')
+    wait "$!" || die 'Listing the unpushed commits failed'
 
     if (( ${#changes[@]} )); then
         for line in "${changes[@]}"; do
