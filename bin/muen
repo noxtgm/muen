@@ -56,11 +56,11 @@ _repo_update() {
 
     log_info "Repository updated to ${after:0:7}"
     log_info 'Restarting with the updated files'
-    REPO_UPDATED=1 exec "${REPO_PATH}/bin/muen" "$@"
+    MUEN_REPO_UPDATED=1 exec "${REPO_PATH}/bin/muen" "$@"
 }
 
 _update() {
-    if [[ -z "${REPO_UPDATED:-}" ]]; then
+    if [[ -z "${MUEN_REPO_UPDATED:-}" ]]; then
         _repo_update "$@"
     fi
 
