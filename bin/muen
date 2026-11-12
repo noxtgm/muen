@@ -57,6 +57,9 @@ _repo_update() {
     fi
 
     log_info "Repository updated to ${after:0:7}"
+
+    [[ -x "${REPO_PATH}/bin/muen" ]] || die "bin/muen is not executable in this update, fix its mode in the repository (git update-index --chmod=+x bin/muen) and push, then run 'bash ${REPO_PATH}/bin/muen update'"
+
     log_info 'Restarting with the updated files'
     MUEN_REPO_UPDATED=1 exec "${REPO_PATH}/bin/muen" "$@"
 }
