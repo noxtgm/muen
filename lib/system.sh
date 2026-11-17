@@ -1,9 +1,9 @@
 _system_file_current() {
-    sudo cmp -s -- "${REPO_PATH}/system/$1" "/$1"
+    sudo cmp -s -- "${REPO_PATH}/home/$1" "/$1"
 }
 
 _system_file_install() {
-    sudo install -Dm 644 -- "${REPO_PATH}/system/$1" "/$1"
+    sudo install -Dm 644 -- "${REPO_PATH}/home/$1" "/$1"
 }
 
 _system_configure_cmdline() {
