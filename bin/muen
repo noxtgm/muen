@@ -71,7 +71,7 @@ _update() {
 
     source "${REPO_LIB}/init.sh"
     install_packages
-    configs_deploy
+    deploy_configs
     configure_system
     set_default_shell
     rebuild_boot_images
