@@ -72,9 +72,9 @@ _update() {
     source "${REPO_LIB}/init.sh"
     packages_install
     configs_deploy
-    boot_configure
+    system_configure
     shell_set_default
-    boot_images_rebuild
+    system_rebuild_boot_images
 }
 
 main() {

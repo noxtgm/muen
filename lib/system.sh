@@ -1,25 +1,25 @@
-_boot_file_current() {
+_system_file_current() {
     sudo cmp -s -- "${REPO_PATH}/system/$1" "/$1"
 }
 
-_boot_file_install() {
+_system_file_install() {
     sudo install -Dm 644 -- "${REPO_PATH}/system/$1" "/$1"
 }
 
-_boot_configure_cmdline() {
+_system_configure_cmdline() {
     local file='etc/cmdline.d/quiet.conf'
 
     log_step 'Configuring the kernel command line'
 
-    if _boot_file_current "$file"; then
+    if _system_file_current "$file"; then
         log_info 'Kernel command line up to date'
     else
-        _boot_file_install "$file"
+        _system_file_install "$file"
         log_info 'Kernel command line updated'
     fi
 }
 
-_boot_configure_console() {
+_system_configure_console() {
     local issue='/etc/issue.d/cursor.issue'
     local cursor
 
@@ -35,15 +35,15 @@ _boot_configure_console() {
     fi
 }
 
-_boot_configure_loader() {
+_system_configure_boot_loader() {
     local file='boot/loader/loader.conf'
 
     log_step 'Configuring the boot loader'
 
-    if _boot_file_current "$file"; then
+    if _system_file_current "$file"; then
         log_info 'Boot loader configuration up to date'
     else
-        _boot_file_install "$file"
+        _system_file_install "$file"
         log_info 'Boot loader configuration updated'
     fi
 
@@ -55,35 +55,35 @@ _boot_configure_loader() {
     fi
 }
 
-_boot_configure_zram() {
+_system_configure_zram() {
     local sysctl='etc/sysctl.d/90-vm-zram-parameters.conf'
     local size='etc/systemd/zram-generator.conf.d/60-swap-size.conf'
 
     log_step 'Tuning swap on zram'
 
-    if _boot_file_current "$sysctl"; then
+    if _system_file_current "$sysctl"; then
         log_info 'Memory settings up to date'
     else
-        _boot_file_install "$sysctl"
+        _system_file_install "$sysctl"
         log_info 'Memory settings updated'
     fi
 
-    if _boot_file_current "$size"; then
+    if _system_file_current "$size"; then
         log_info 'Swap size up to date'
     else
-        _boot_file_install "$size"
+        _system_file_install "$size"
         log_info 'Swap size updated'
     fi
 }
 
-boot_configure() {
-    _boot_configure_cmdline
-    _boot_configure_console
-    _boot_configure_loader
-    _boot_configure_zram
+system_configure() {
+    _system_configure_cmdline
+    _system_configure_console
+    _system_configure_boot_loader
+    _system_configure_zram
 }
 
-boot_images_rebuild() {
+system_rebuild_boot_images() {
     log_step 'Rebuilding the boot images'
 
     if ! sudo mkinitcpio -P; then
