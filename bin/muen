@@ -70,11 +70,11 @@ _update() {
     fi
 
     source "${REPO_LIB}/init.sh"
-    packages_install
+    install_packages
     configs_deploy
-    system_configure
-    shell_set_default
-    system_rebuild_boot_images
+    configure_system
+    set_default_shell
+    rebuild_boot_images
 }
 
 main() {

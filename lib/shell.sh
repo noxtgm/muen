@@ -1,4 +1,4 @@
-shell_set_default() {
+set_default_shell() {
     local zsh_path='/usr/bin/zsh'
 
     log_step 'Setting default shell'
