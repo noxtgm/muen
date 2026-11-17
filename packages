@@ -1,7 +1,8 @@
 quickshell
-brightnessctl
-playerctl
 fprintd
+playerctl
+brightnessctl
+xdg-desktop-portal-hyprland
 
 hyprland
 hyprlauncher
@@ -22,7 +23,6 @@ ghostty
 
 7zip
 btop
-docker
 nodejs
 python
 

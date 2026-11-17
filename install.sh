@@ -6,6 +6,8 @@ REPO_AUTHOR="${REPO_AUTHOR:-noxtgm}"
 REPO_URL="${REPO_URL:-https://github.com/${REPO_AUTHOR}/${REPO_NAME}.git}"
 REPO_PATH="${REPO_PATH:-${XDG_DATA_HOME:-${HOME}/.local/share}/${REPO_NAME}}"
 
+export GIT_TERMINAL_PROMPT=0
+
 install() {
     if (( EUID == 0 )); then
         printf 'Run the installer as your regular user, not as root\n' >&2
