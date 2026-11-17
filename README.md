@@ -19,11 +19,14 @@ muen update --force  # Same logic but discards local changes in the clone and ov
 
 ```
 .
-├── bin/        # Update command-line entry point
-├── configs/    # Configs linked over to ~/.config/
-├── lib/        # Sourced shared helpers and logic
-├── system/     # System-level configs copied over
-├── widgets/    # Styled widgets following a shared theme
-├── install.sh  # Fresh install entry point
-└── packages    # List of installed official packages
+├── bin/              # Update command-line entry point
+├── lib/              # Sourced shared helpers and logic
+├── root/             # Deployed files, laid out as on the end machine
+│   ├── boot/         # System configs copied over to /boot/
+│   ├── etc/          # System configs copied over to /etc/
+│   └── home/user/    # User files deployed to the home directory of the user running muen
+│       └── .config/  # User configs deployed to ~/.config/
+├── widgets/          # Styled widgets matching a shared theme
+├── install.sh        # Fresh install entry point
+└── packages          # List of installed official packages
 ```
