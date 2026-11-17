@@ -4,7 +4,7 @@ This project contains dotfiles and deployment scripts specifically configured an
 
 # Scope
 
-- This project is tailored for a single user, who is also its only maintainer and runs it by hand; don't add handling for concurrent runs, duplicate entries in package lists, or comments in list files
+- This project is tailored for a single user, who is also its only maintainer and runs it by hand; don't add handling for multiples users, concurrent runs, duplicate entries in package lists, or comments in list files
 - Until the project is complete and stable, target a fresh `archinstall` plus the current version only: no migration or cleanup code for machines set up with an earlier version, and no notes on how an existing machine would pick up a change
 
 # Security considerations
