@@ -8,6 +8,7 @@ REPO_PATH="${REPO_PATH:-${XDG_DATA_HOME:-${HOME}/.local/share}/${REPO_NAME}}"
 
 export GIT_TERMINAL_PROMPT=0
 
+# Installed with `curl -fsSL https://raw.githubusercontent.com/{REPO_AUTHOR}/{REPO_NAME}/main/install.sh | bash`
 install() {
     if (( EUID == 0 )); then
         printf 'Run the installer as your regular user, not as root\n' >&2
