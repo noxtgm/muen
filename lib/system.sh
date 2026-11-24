@@ -114,3 +114,13 @@ rebuild_boot_images() {
 
     log_info 'Boot images rebuilt'
 }
+
+restart_system() {
+    log_step 'Restarting the system'
+
+    if ! systemctl reboot; then
+        die 'Restarting failed, restart the system to apply the update'
+    fi
+
+    log_info 'Restart started'
+}

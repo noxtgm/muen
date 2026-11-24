@@ -76,6 +76,7 @@ _update() {
     configure_system
     set_default_shell
     rebuild_boot_images
+    restart_system
 }
 
 main() {
