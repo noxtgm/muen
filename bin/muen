@@ -25,7 +25,7 @@ _repo_update() {
     # Local work in the clone is flagged like a config conflict (discarded with --force)
     while IFS= read -r line; do
         changes+=("local change: ${line:3}")
-    done < <(trap - ERR; git -C "$REPO_PATH" status --porcelain --untracked-files=no)
+    done < <(trap - ERR; git -C "$REPO_PATH" status --porcelain --untracked-files=all --ignored)
     wait "$!" || die 'Listing the local changes failed'
 
     while IFS= read -r line; do
@@ -49,6 +49,7 @@ _repo_update() {
 
     before="$(git -C "$REPO_PATH" rev-parse HEAD)"
     git -C "$REPO_PATH" reset --quiet --hard '@{upstream}'
+    git -C "$REPO_PATH" clean --quiet -ffdx
     after="$(git -C "$REPO_PATH" rev-parse HEAD)"
 
     if [[ "$before" == "$after" && ${#changes[@]} -eq 0 ]]; then

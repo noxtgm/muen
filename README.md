@@ -12,7 +12,7 @@ curl -fsSL https://raw.githubusercontent.com/<author>/<repo>/<branch>/install.sh
 
 ```sh
 muen update          # Update the clone from the remote and deploy its configs
-muen update --force  # Same logic but discards local changes in the clone and overwrites conflicting files in ~/.config
+muen update --force  # Same logic but discards local changes in the clone and overwrites conflicting files in the home directory
 ```
 
 # Structure

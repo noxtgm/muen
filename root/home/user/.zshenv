@@ -9,7 +9,7 @@ export ZDOTDIR="$XDG_CONFIG_HOME"/zsh
 
 # See https://wiki.archlinux.org/title/Zsh#Configuring_$PATH
 typeset -U path PATH
-path=($path ~/.local/bin)
+path=(~/.local/bin $path)
 export PATH
 
 # See https://wiki.archlinux.org/title/Environment_variables#Default_programs
