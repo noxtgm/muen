@@ -1,154 +1,71 @@
 # Context
 
-This project contains dotfiles and deployment scripts specifically configured and tuned to be deployed on the latest version of Arch Linux freshly installed using `archinstall`. It targets a single machine with a single SSD.
+Dotfiles and deployment scripts for one machine: the latest Arch Linux, freshly installed with `archinstall`, used by a single person. The selected `archinstall` configuration and options are detailed in @CONFIGURATION.md
 
 # Scope
 
-- This project is tailored for a single user, who is also its only maintainer and runs it by hand; don't add handling for multiples users, concurrent runs, duplicate entries in package lists, or comments in list files
-- Until the project is complete and stable, target a fresh `archinstall` plus the current version only: no migration or cleanup code for machines set up with an earlier version, and no notes on how an existing machine would pick up a change
+The project is not complete or stable yet, so keep every change aimed at that one target:
+- Target a fresh `archinstall` and the current version of this repo only
+- Don't write migration or cleanup code for machines set up with an earlier version, and don't add notes on how an existing machine would pick up a change
+- Assume one user and one run at a time, don't add multi-user handling or guards against concurrent runs
 
-# Security considerations
+## Layout
 
-- Security ALWAYS comes before convenience; when a choice trades one for the other (e.g. autologin, skipping a password, looser permissions, fewer prompts), default to the most secure option and present the convenient option with its security cost explained only
-- Before implementing anything that changes how the user authenticates or what can capture input or the screen, audit it (verify claims in source AND documentation, test failure modes) and get explicit approval; prefer designs whose failure modes end at a password prompt, NEVER at an open shell or an unlocked session
+```
+.
+├── install.sh        Bootstrap install entry point
+├── packages          Official repository package names
+├── bin/muen          Dotfiles update command-line entry point
+├── lib/              Sourced shared helpers and logic
+├── root/             Deployed files laid out as on the machine
+│   ├── boot/         System configs copied over to /boot/ by lib/system.sh
+│   ├── etc/          System configs copied over to /etc/ by lib/system.sh
+│   └── home/user/    User files linked into $HOME by deploy_configs
+│       └── .config/  User configs deployed to ~/.config/
+└── widgets/          Styled widgets matching a shared theme
+```
 
-# Design choices
+# Security
 
-- Follow the official documentation (upstream manual, Arch Wiki, man pages) of the latest version of each tool, and cite the doc and version a change follows; check which version is the latest with web tools first, NEVER assume it or outright trust potentially deprecated findings
-- Any choice that departs from the officially recommended setup must be presented first, saying how and why it departs, and applied only after explicit approval from the user
-- Check against how tools behave in their current versions
-- Never put symlinks in `configs/` (`configs_deploy` refuses them); share a config between paths by committing the file twice or with the application's own include mechanism
+Security comes before convenience. When a choice trades one for the other (autologin, skipping a password, looser permissions, fewer prompts), implement the secure option and mention the convenient one with its security cost, so the user can decide whether to switch.
 
-# Documentation access
+Changes to how the user authenticates, or to what can capture input or the screen, need the user's approval before they go in. First audit the change: check its claims against both the source and the documentation, and test its failure modes in the container. Then present the audit and the proposed diff. Prefer designs that fail closed: a failure should end at a password prompt, never at an open shell or an unlocked session.
 
-- wiki.archlinux.org answers automated fetches with a bot check; instead read Arch Wiki pages from the `arch-wiki-docs` package in a container (it is a snapshot: compare its date with the live page), or ask the user to save the live page you require
-- Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly; docs sites get reorganised often so find the current URL rather than guessing it
+# Follow upstream
 
-# Testing instructions
+Follow the official documentation (upstream manual, Arch Wiki, man pages) for the version of each tool that Arch currently ships. On a rolling release that is the version in the official repositories, which can lag behind or differ from upstream's newest release. Check it with `pacman -Si <package>` in the container instead of assuming it from memory or from older search results.
 
-- Verify behavior by testing in a Docker `archlinux:latest` container, NEVER by reasoning alone
-- Test interactive behavior (key bindings, completion, widgets, etc) in a real terminal
-- Remove any containers and images created for testing when done with the tasks given
+In your summary, cite the doc and version each change follows. Add a short comment with the link next to any setting that isn't obvious from the docs.
 
-# archinstall configuration
+If you think a departure from the recommended setup would be better, implement the recommended setup and propose the departure separately: what it changes, why, and what it costs. Apply it only after the user approves.
 
-Below is the selected configuration of the official `archinstall` installer, each H2 being a top-level menu of the installer etc.
+# Testing
 
-## Archinstall language
+Reasoning alone isn't verification: test behavior in a throwaway `archlinux:latest` container.
 
-- Default
+Test everything the container can show. For what it can't, say so and give the user a short manual check to run on the real machine.
 
-## Locales
+Interactive behavior (key bindings, completion, widgets) needs a terminal. Drive it with tmux inside the container: `tmux send-keys` for input, then `tmux capture-pane -p` to read the screen.
 
-- Default
+Label everything you create with `--label dots-test`. When the task is done, remove those containers (`docker ps -aq --filter label=dots-test | xargs -r docker rm -f`) and any images you built.
 
-## Mirrors and repositories
+# Verify what you claim
 
-- Default
+The most common failure is confident output that was never executed.
+- Read the code you are changing before you change it
+- When you state a fact about the codebase, cite the file and line you read it from
+- Back claims about how a tool behaves with its documentation for the shipped version, or with a test
+- Say plainly what you did not verify: "The logic is sound but I haven't run it" is useful; silence is not
+- Never claim something works because it should
 
-## Disk configuration
+# Reading documentation
 
-### Partitioning
+wiki.archlinux.org answers automated fetches with a bot check; instead read Arch Wiki pages from the `arch-wiki-docs` package in a container. That copy is a snapshot, and its package version is its date. Cite that date. If a detail might have changed since, carry on with the snapshot and ask the user to save the live page.
 
-- Use a best-effort default partition layout
-- `ext4` main filesystem
-- No separate partition for /home
+man.archlinux.org serves man pages for the versions in the repositories, shows the package version on each page, and can be fetched directly.
 
-### LVM
+Other docs (upstream sites, GitHub, freedesktop specs) can be fetched directly. Docs sites get reorganised often, so search for the current URL rather than guessing it.
 
-- None
+# When something here can't be done
 
-### Disk encryption
-
-- `LUKS` encryption type
-- Encryption password set
-- Default iteration time
-- Root partition selected
-- Default HSM (none)
-
-## Swap
-
-- Use swap on zram
-- `zstd` zram compression algorithm
-
-## Bootloader
-
-- `Systemd-boot` bootloader
-- Enabled unified kernel images
-- Enabled Plymouth
-
-## Kernels
-
-- `linux` kernel
-
-## Additional firmware
-
-- None
-
-## Hostname
-
-- Default
-
-## Authentication
-
-### Root password
-
-- None (root account stays locked)
-
-### User account
-
-- User account with superuser (sudo) access
-
-### U2F login setup
-
-- None
-
-## Profile
-
-- `Minimal` profile type
-
-## Applications
-
-### Bluetooth
-
-- Disabled bluetooth configuration
-
-### Audio
-
-- `pipewire` audio configuration
-
-### Print service
-
-- Disabled print service configuration
-
-### Power management
-
-- `power-profiles-daemon` power management
-
-### Firewall
-
-- `ufw` firewall
-
-### Additional fonts
-
-- noto-fonts
-
-## Network configuration
-
-- Use Network Manager (default backend)
-
-## Pacman
-
-- Default
-
-## Additional packages
-
-- None
-
-## Timezone
-
-- Local timezone selected (not the UTC default)
-
-## Automatic time sync (NTP)
-
-- Default
+If a rule can't be followed in your environment (no Docker, a page you can't reach, a check that needs the real machine), don't stall and don't skip it silently. Do what you can, say what you couldn't, and finish the rest of the task. Save questions and approval requests for the end of your work, unless the answer would change what you build.
