@@ -1,6 +1,6 @@
 # archinstall configuration
 
-Below is the selected configuration of the official `archinstall` installer, each H2 represents a top-level menu of the installer, H3 a sub-menu etc.
+The Arch Linux machine comes with a specific configuration set by the official `archinstall` installer. Each H2 represents a top-level menu of the `archinstall` installer, H3 a sub-menu, etc.
 
 ## Archinstall language
 
